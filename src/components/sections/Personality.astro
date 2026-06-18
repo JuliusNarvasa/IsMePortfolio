@@ -359,14 +359,52 @@ const petProjectsImageSources = projects.map((p) => p.images.map((i) => i.src));
       });
     }
 
-    // Collapse a tile's details instantly. Cancels any in-flight expand
-    // animation on the same element so the two can't fight each other.
+    // Collapse a tile's details with a smooth animation that mirrors expandTile.
+    // Cancels any in-flight animation on the same element first so the two
+    // can't fight each other. If the tile is already collapsed (offsetHeight
+    // 0), the call short-circuits — no point animating from 0 to 0.
+    //
+    // The starting state is set inline (matching the first keyframe) and a
+    // reflow is forced before .animate() runs. Without this, the animation
+    // can race the aria-current removal in showListItem() (both happen in
+    // the same tick) and snap straight to the final frame — which manifested
+    // as a tile that simply never collapsed on auto-cycle.
     function collapseTile(tile) {
       const details = tile.querySelector('[data-pet-details]');
       if (!details) return;
       details.getAnimations().forEach((a) => a.cancel());
-      details.style.height = '0px';
-      details.style.marginTop = '0';
+
+      const startHeight = details.offsetHeight;
+      if (startHeight === 0) {
+        details.style.height = '0px';
+        details.style.marginTop = '0';
+        return;
+      }
+
+      // Set the starting state explicitly and force a reflow so the browser
+      // registers it before the animation kicks off.
+      details.style.height = startHeight + 'px';
+      details.style.marginTop = '0.75rem';
+      void details.offsetHeight;
+
+      // Animate from the current rendered height down to 0. `fill: 'forwards'`
+      // holds the final collapsed state. onfinish pins the inline style so the
+      // static aria-current="false" CSS rule stays consistent with it.
+      const animation = details.animate(
+        [
+          { height: startHeight + 'px', marginTop: '0.75rem' },
+          { height: '0px', marginTop: '0' },
+        ],
+        {
+          duration: EXPAND_DURATION_MS,
+          easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
+          fill: 'forwards',
+        }
+      );
+      animation.onfinish = () => {
+        details.style.height = '0px';
+        details.style.marginTop = '0';
+      };
     }
 
     // Expand a tile's details with a smooth animation. Measures the natural

@@ -172,7 +172,7 @@ body {
 
 /* Pet-projects list-item details: collapsed by default, expanded via aria-current.
    The CSS only declares the static states — JS handles the actual animation
-   (instant collapse, animated expand) via the Web Animations API. No CSS
+   (animated collapse, animated expand) via the Web Animations API. No CSS
    transitions, no max-height / grid-template-rows tricks. */
 [data-pet-list-item] [data-pet-details] {
   overflow: hidden;
