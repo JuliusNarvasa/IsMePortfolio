@@ -1,0 +1,244 @@
+---
+import SectionHeader from '../ui/SectionHeader.astro';
+import FrustrationCard from '../ui/FrustrationCard.astro';
+
+const interests = [
+  {
+    title: 'Local AI',
+    description: 'Running real LLMs on consumer GPUs at home',
+    icon: 'cpu',
+  },
+  {
+    title: 'Homelab & Self-Hosting',
+    description: 'Proxmox, Docker, and way too many VMs',
+    icon: 'server',
+  },
+  {
+    title: 'Computer Vision',
+    description: 'YOLO, OCR, and on-device detection pipelines',
+    icon: 'eye',
+  },
+  {
+    title: 'Automation',
+    description: 'Cron jobs, scripts, and things that fix themselves',
+    icon: 'workflow',
+  },
+  {
+    title: 'Pickleball',
+    description: 'Regular games, questionable backhand',
+    icon: 'paddle',
+  },
+  {
+    title: 'Hardware Experimentation',
+    description: 'Pushing consumer parts beyond the spec sheet',
+    icon: 'wrench',
+  },
+] as const;
+
+const projects = [
+  {
+    title: 'Re-Fuel',
+    problem: 'I kept forgetting gas prices across different stations.',
+    solution: 'A mobile app that auto-logs every fill-up with GPS and reads the price board with the camera.',
+    image: '/images/personality/refuel.jpg',
+    alt: 'Re-Fuel mobile app showing fuel log history',
+    href: 'https://refuel.bambaw-tumba.com',
+  },
+  {
+    title: 'NetworkWatcher',
+    problem: 'I had no idea if my ISP failover was actually working.',
+    solution: 'A self-hosted Grafana dashboard that graphs latency and downtime per ISP in real time.',
+    image: '/images/personality/networkwatcher.bmp',
+    alt: 'NetworkWatcher Grafana dashboard showing ISP latency and uptime',
+  },
+  {
+    title: 'Local Llama',
+    problem: 'Cloud LLM APIs were getting expensive and laggy for daily use.',
+    solution: 'A local llama.cpp + ROCm rig running a 30B model on my GPU, free of charge.',
+    image: '/images/personality/locallama.jpg',
+    alt: 'Chat session with a locally-hosted LLM, no cloud involved',
+  },
+  {
+    title: 'GPU VRAM Monitor',
+    problem: 'Windows could not tell me which process was eating my VRAM.',
+    solution: 'A small WPF tool that shows per-process VRAM usage for AMD GPUs.',
+    image: '/images/personality/homelab-rack.jpg',
+    alt: 'The consumer AMD GPU that prompted the tool — an actual RX 7800 XT in a homelab rig',
+    href: 'https://github.com/JuliusNarvasa/GPUVramMonitor',
+  },
+];
+---
+
+<section id="beyond-the-code" class="py-section px-6" aria-labelledby="section-personality-title">
+  <div class="mx-auto max-w-content">
+    <div data-reveal>
+      <SectionHeader
+        eyebrow="00 — Beyond the code"
+        title="Beyond the Code"
+        description="A peek at what I build and break when nobody's watching."
+      />
+    </div>
+
+    {/* Two-column intro: narrative (left) + interests grid (right) */}
+    <div class="grid grid-cols-1 gap-10 lg:grid-cols-[1.05fr_1fr] lg:gap-12">
+      {/* Left column — narrative */}
+      <div class="flex flex-col gap-5">
+        {/* Vibe badges */}
+        <div
+          class="flex flex-wrap items-center gap-2"
+          data-reveal
+          data-reveal-delay="80"
+        >
+          <span class="inline-flex items-center gap-1.5 rounded-sm border border-border bg-bg-glass px-2 py-1 font-mono-sm text-text-muted">
+            <span class="inline-block h-1.5 w-1.5 rounded-full bg-accent"></span>
+            ~/whoami
+          </span>
+          <span class="inline-flex items-center gap-1.5 rounded-sm border border-border bg-bg-glass px-2 py-1 font-mono-sm text-text-muted">
+            <span class="inline-block h-1.5 w-1.5 rounded-full bg-accent"></span>
+            backend
+          </span>
+          <span class="inline-flex items-center gap-1.5 rounded-sm border border-border bg-bg-glass px-2 py-1 font-mono-sm text-text-muted">
+            <span class="inline-block h-1.5 w-1.5 rounded-full bg-accent"></span>
+            tinkerer
+          </span>
+        </div>
+
+        {/* Paragraph 1 — slightly more prominent */}
+        <p
+          class="text-body-lg text-text leading-relaxed"
+          data-reveal
+          data-reveal-delay="160"
+        >
+          I'm a backend developer by trade, but most of what I build starts with me getting mildly annoyed at something. If a tool feels clunky, expensive, or doesn't exist at all, my instinct is to just build it.
+        </p>
+
+        {/* Paragraph 2 */}
+        <p
+          class="text-body text-text-muted leading-relaxed"
+          data-reveal
+          data-reveal-delay="240"
+        >
+          I like practical engineering. Systems that work quietly in the background. Code that solves a real problem without needing a slide deck to explain it.
+        </p>
+
+        {/* Paragraph 3 */}
+        <p
+          class="text-body text-text-muted leading-relaxed"
+          data-reveal
+          data-reveal-delay="320"
+        >
+          Outside of work, I play pickleball, push consumer hardware further than it probably wants to go, and rebuild my homelab more often than I should.
+        </p>
+      </div>
+
+      {/* Right column — 2x3 interest grid */}
+      <div class="grid grid-cols-2 gap-3">
+        {interests.map((interest, i) => (
+          <div
+            class="group rounded-lg border border-border bg-bg-glass p-4 backdrop-blur-glass transition-all duration-base ease-out-snappy hover:-translate-y-0.5 hover:border-border-strong hover:shadow-glass"
+            data-reveal
+            data-reveal-delay={String(i * 80)}
+          >
+            <div class="mb-2 text-accent">
+              {interest.icon === 'cpu' && (
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="4" y="4" width="16" height="16" rx="2" />
+                  <rect x="9" y="9" width="6" height="6" />
+                  <path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3" />
+                </svg>
+              )}
+              {interest.icon === 'server' && (
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="2" y="3" width="20" height="8" rx="2" />
+                  <rect x="2" y="13" width="20" height="8" rx="2" />
+                  <line x1="6" y1="7" x2="6.01" y2="7" />
+                  <line x1="6" y1="17" x2="6.01" y2="17" />
+                  <line x1="10" y1="7" x2="14" y2="7" />
+                  <line x1="10" y1="17" x2="14" y2="17" />
+                </svg>
+              )}
+              {interest.icon === 'eye' && (
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z" />
+                  <circle cx="12" cy="12" r="3" />
+                  <line x1="3" y1="3" x2="21" y2="21" />
+                </svg>
+              )}
+              {interest.icon === 'workflow' && (
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect width="7" height="7" x="3" y="3" rx="1.5" />
+                  <rect width="7" height="7" x="14" y="14" rx="1.5" />
+                  <path d="M7 10v2a2 2 0 0 0 2 2h5" />
+                </svg>
+              )}
+              {interest.icon === 'paddle' && (
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M8 2.5a5.5 5.5 0 0 1 5.5 5.5v3a3 3 0 0 1-3 3H8.5A5.5 5.5 0 0 1 3 8.5v-.5A5.5 5.5 0 0 1 8 2.5z" />
+                  <path d="M10.5 14 13 22" />
+                  <path d="M10.5 14a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" fill="currentColor" stroke="none" />
+                </svg>
+              )}
+              {interest.icon === 'wrench' && (
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+                </svg>
+              )}
+            </div>
+            <p class="font-mono-sm text-text mb-1 uppercase tracking-wider">{interest.title}</p>
+            <p class="text-body-sm text-text-muted leading-relaxed">{interest.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    {/* Built Because It Annoyed Me — subsection */}
+    <div class="mt-20 lg:mt-24">
+      <div class="mb-8" data-reveal>
+        <p class="font-mono-sm text-accent mb-2">// pet_projects.built_from_frustration</p>
+        <h3 class="text-h3 text-text mb-2">Built Because It Annoyed Me</h3>
+        <p class="text-body text-text-muted max-w-prose">Side projects born from small daily annoyances.</p>
+      </div>
+
+      {/* 4 frustration cards: horizontal scroll on mobile/tablet, 4-col grid on desktop */}
+      <div class="scroll-x -mx-6 flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-2 lg:mx-0 lg:grid lg:grid-cols-4 lg:gap-5 lg:overflow-visible lg:px-0 lg:pb-0">
+        {projects.map((project, i) => (
+          <div
+            class="w-[78vw] max-w-[300px] flex-shrink-0 snap-start lg:w-auto lg:max-w-none"
+            data-reveal
+            data-reveal-delay={String(i * 80)}
+          >
+            <FrustrationCard {...project} />
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Slim, low-contrast scrollbar for the horizontal carousel on touch devices */
+  .scroll-x {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.14) transparent;
+  }
+  .scroll-x::-webkit-scrollbar {
+    height: 6px;
+  }
+  .scroll-x::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scroll-x::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.14);
+    border-radius: 3px;
+  }
+
+  @media (min-width: 1024px) {
+    /* Hide the scroll affordance entirely on desktop (no overflow) */
+    .scroll-x::-webkit-scrollbar {
+      display: none;
+    }
+    .scroll-x {
+      scrollbar-width: none;
+    }
+  }
+</style>
