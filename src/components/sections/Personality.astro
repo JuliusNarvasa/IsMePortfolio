@@ -278,7 +278,7 @@ const petProjectsImageSources = projects.map((p) => p.images.map((i) => i.src));
 
       {/* Right: auto-cycling slideshow for the active project */}
       <div
-        class="relative overflow-hidden rounded-lg border border-border bg-bg-elevated min-h-[280px] lg:aspect-[4/3] lg:min-h-0"
+        class="relative overflow-hidden rounded-lg border border-border bg-bg-elevated min-h-[280px] lg:min-h-0"
         data-pet-slideshow
         data-reveal
         data-reveal-delay="160"
@@ -289,7 +289,7 @@ const petProjectsImageSources = projects.map((p) => p.images.map((i) => i.src));
           <div data-pet-project-index={pi}>
             {project.images.map((img, ii) => (
               <img
-                class="pet-slide absolute inset-0 h-full w-full object-cover"
+                class="pet-slide absolute inset-0 h-full w-full object-contain"
                 src={img.src}
                 alt={img.alt}
                 loading="lazy"
