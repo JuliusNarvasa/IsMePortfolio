@@ -81,18 +81,30 @@
     const fadeDuration = 800;
 
     function showSlide(index: number) {
+      const next = (index + 1) % total;
+
+      // Hide all instantly
       slides.forEach((s, i) => {
-        if (i === index) {
-          s.style.transition = `opacity ${fadeDuration}ms ease-in-out`;
-          s.style.opacity = '1';
-        } else if (i === (index - 1 + total) % total) {
-          s.style.transition = `opacity ${fadeDuration}ms ease-in-out`;
-          s.style.opacity = '0';
-        } else {
+        if (i !== index && i !== (index - 1 + total) % total) {
           s.style.transition = 'none';
           s.style.opacity = '0';
         }
       });
+
+      // Prepare incoming slide at 0 (no transition yet)
+      const incoming = slides[next];
+      incoming.style.transition = 'none';
+      incoming.style.opacity = '0';
+
+      // Force reflow so the browser registers the 0 before animating to 1
+      void incoming.offsetWidth;
+
+      // Fade in incoming, fade out current
+      slides[index].style.transition = `opacity ${fadeDuration}ms ease-in-out`;
+      slides[index].style.opacity = '0';
+
+      incoming.style.transition = `opacity ${fadeDuration}ms ease-in-out`;
+      incoming.style.opacity = '1';
     }
 
     setInterval(() => {
