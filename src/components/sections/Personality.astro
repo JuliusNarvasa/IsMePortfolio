@@ -102,18 +102,19 @@ const petProjectsImageSources = projects.map((p) => p.images.map((i) => i.src));
   aria-labelledby="section-personality-title"
 >
   <div class="mx-auto w-full max-w-content">
-    <div data-reveal>
-      <SectionHeader
-        eyebrow="00 — Beyond the code"
-        title="Beyond the Code"
-        description="A peek at what I build and break when nobody's watching."
-      />
-    </div>
+    
 
     {/* Two-column intro: narrative (left) + interests grid (right) */}
     <div class="grid grid-cols-1 gap-10 lg:grid-cols-[1.05fr_1fr] lg:gap-12">
       {/* Left column — narrative */}
       <div class="flex flex-col gap-5">
+        <div data-reveal>
+          <SectionHeader
+            eyebrow="00 — Beyond the code"
+            title="Beyond the Code"
+            description="A peek at what I build and break when nobody's watching."
+          />
+        </div>
         {/* Vibe badges */}
         <div
           class="flex flex-wrap items-center gap-2"
@@ -162,8 +163,8 @@ const petProjectsImageSources = projects.map((p) => p.images.map((i) => i.src));
         </p>
       </div>
 
-      {/* Right column — 2x3 interest grid */}
-      <div class="grid grid-cols-2 gap-3">
+      {/* Right column — 2x3 interest grid (self-centered vertically to balance the taller left column) */}
+      <div class="grid grid-cols-2 gap-3 lg:self-center">
         {interests.map((interest, i) => (
           <div
             class="group rounded-lg border border-border bg-bg-glass p-4 backdrop-blur-glass transition-all duration-base ease-out-snappy hover:-translate-y-0.5 hover:border-border-strong hover:shadow-glass"
@@ -251,26 +252,28 @@ const petProjectsImageSources = projects.map((p) => p.images.map((i) => i.src));
             <span data-pet-index class="font-mono-sm mb-2 block">0{i + 1}</span>
             <h4 data-pet-title class="text-h4 text-text">{project.title}</h4>
             <div data-pet-details>
-              <p class="text-body-sm text-text-muted mb-2 leading-relaxed">
-                <span class="font-mono-sm text-accent mr-1.5">// problem:</span>
-                {project.problem}
-              </p>
-              <p class="text-body-sm text-text leading-relaxed">
-                <span class="font-mono-sm text-accent mr-1.5">→ fix:</span>
-                {project.solution}
-              </p>
-              {project.href && (
-                <div class="mt-3">
-                  <a
-                    href={project.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="font-mono-sm text-accent inline-flex items-center gap-1 transition-colors duration-fast hover:text-accent-hover"
-                  >
-                    view project ↗
-                  </a>
-                </div>
-              )}
+              <div class="pet-details-inner">
+                <p class="text-body-sm text-text-muted mb-2 leading-relaxed">
+                  <span class="font-mono-sm text-accent mr-1.5">// problem:</span>
+                  {project.problem}
+                </p>
+                <p class="text-body-sm text-text leading-relaxed">
+                  <span class="font-mono-sm text-accent mr-1.5">→ fix:</span>
+                  {project.solution}
+                </p>
+                {project.href && (
+                  <div class="mt-3">
+                    <a
+                      href={project.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="font-mono-sm text-accent inline-flex items-center gap-1 transition-colors duration-fast hover:text-accent-hover"
+                    >
+                      view project ↗
+                    </a>
+                  </div>
+                )}
+              </div>
             </div>
           </button>
         ))}
@@ -313,8 +316,10 @@ const petProjectsImageSources = projects.map((p) => p.images.map((i) => i.src));
 
 {/* Auto-cycle script: rotates through the active project's images, then
     advances to the next project and resets. Clicking a list item jumps to
-    that project and restarts the 5s timer. Crossfade is CSS-driven via the
-    .is-active class — see .pet-slide / .pet-slide.is-active in global.css. */}
+    that project and restarts the 5s timer. Image crossfade is CSS-driven via
+    the .is-active class — see .pet-slide / .pet-slide.is-active in global.css.
+    Tile details collapse/expand is JS-driven via the Web Animations API so
+    the collapse happens the moment a tile is no longer the selected one. */}
 <script is:inline>
   (() => {
     const dataEl = document.getElementById('pet-projects-data');
@@ -328,6 +333,7 @@ const petProjectsImageSources = projects.map((p) => p.images.map((i) => i.src));
     if (!Array.isArray(projects) || projects.length === 0) return;
 
     const INTERVAL_MS = 5000;
+    const EXPAND_DURATION_MS = 300;
     let activeProject = 0;
     let activeImage = 0;
     let intervalId = null;
@@ -353,16 +359,80 @@ const petProjectsImageSources = projects.map((p) => p.images.map((i) => i.src));
       });
     }
 
+    // Collapse a tile's details instantly. Cancels any in-flight expand
+    // animation on the same element so the two can't fight each other.
+    function collapseTile(tile) {
+      const details = tile.querySelector('[data-pet-details]');
+      if (!details) return;
+      details.getAnimations().forEach((a) => a.cancel());
+      details.style.height = '0px';
+      details.style.marginTop = '0';
+    }
+
+    // Expand a tile's details with a smooth animation. Measures the natural
+    // height (with margin-top: 0.75rem) and animates from 0 to that value
+    // using the Web Animations API. `fill: forwards` keeps the final state;
+    // onfinish releases the inline height back to `auto` so the layout stays
+    // healthy if the content ever changes.
+    function expandTile(tile) {
+      const details = tile.querySelector('[data-pet-details]');
+      if (!details) return;
+      details.getAnimations().forEach((a) => a.cancel());
+
+      // Measure natural height with the expanded margin-top.
+      const prevHeight = details.style.height;
+      const prevMargin = details.style.marginTop;
+      details.style.height = 'auto';
+      details.style.marginTop = '0.75rem';
+      const naturalHeight = details.offsetHeight;
+      details.style.height = prevHeight;
+      details.style.marginTop = prevMargin;
+
+      // Set the starting state and force a reflow so the browser registers
+      // it before the animation kicks off (otherwise it skips to the end).
+      details.style.height = '0px';
+      details.style.marginTop = '0';
+      void details.offsetHeight;
+
+      const animation = details.animate(
+        [
+          { height: '0px', marginTop: '0' },
+          { height: naturalHeight + 'px', marginTop: '0.75rem' },
+        ],
+        {
+          duration: EXPAND_DURATION_MS,
+          easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
+          fill: 'forwards',
+        }
+      );
+      animation.onfinish = () => {
+        details.style.height = 'auto';
+        details.style.marginTop = '0.75rem';
+      };
+    }
+
+    function switchProject(newIndex) {
+      if (newIndex === activeProject) return;
+      const oldIndex = activeProject;
+      activeProject = newIndex;
+      activeImage = 0;
+      showListItem();
+      showImage();
+      // Collapse the outgoing tile instantly, then animate the incoming one.
+      collapseTile(listItems[oldIndex]);
+      expandTile(listItems[newIndex]);
+    }
+
     function advance() {
       const currentImages = projects[activeProject];
       if (activeImage < currentImages.length - 1) {
         activeImage++;
+        showImage();
       } else {
+        // Roll over to the next project: 0th image + animated tile switch.
         activeImage = 0;
-        activeProject = (activeProject + 1) % projects.length;
-        showListItem();
+        switchProject((activeProject + 1) % projects.length);
       }
-      showImage();
     }
 
     function startInterval() {
@@ -370,7 +440,8 @@ const petProjectsImageSources = projects.map((p) => p.images.map((i) => i.src));
       intervalId = setInterval(advance, INTERVAL_MS);
     }
 
-    // Initial state: project 0, image 0.
+    // Initial state: project 0, image 0. The first tile's details are already
+    // expanded by CSS (aria-current="true" in the markup) — no animation needed.
     showListItem();
     showImage();
     startInterval();
@@ -381,10 +452,7 @@ const petProjectsImageSources = projects.map((p) => p.images.map((i) => i.src));
         // If the click landed on the CTA link inside the button, let the
         // browser handle the navigation and don't change the active project.
         if (e.target && e.target.closest && e.target.closest('a')) return;
-        activeProject = i;
-        activeImage = 0;
-        showListItem();
-        showImage();
+        switchProject(i);
         startInterval();
       });
     });

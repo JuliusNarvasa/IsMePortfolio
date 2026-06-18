@@ -170,17 +170,17 @@ body {
   color: var(--accent);
 }
 
-/* Collapse / expand pet-projects list-item details (only the active item shows them) */
+/* Pet-projects list-item details: collapsed by default, expanded via aria-current.
+   The CSS only declares the static states — JS handles the actual animation
+   (instant collapse, animated expand) via the Web Animations API. No CSS
+   transitions, no max-height / grid-template-rows tricks. */
 [data-pet-list-item] [data-pet-details] {
-  max-height: 0;
   overflow: hidden;
-  transition: max-height 300ms ease, opacity 200ms ease, margin-top 300ms ease;
-  opacity: 0;
+  height: 0;
   margin-top: 0;
 }
 [data-pet-list-item][aria-current="true"] [data-pet-details] {
-  max-height: 500px;
-  opacity: 1;
+  height: auto;
   margin-top: 0.75rem;
 }
 
@@ -223,8 +223,12 @@ body {
     opacity: 1;
     transform: none;
   }
+  /* Slideshow crossfade is an opacity-only transition with no movement or
+     flashing — safe to keep enabled under reduced-motion. The `!important`
+     + class-specificity win against the universal `transition-duration` rule
+     above, restoring the 800ms crossfade for both hero and pet-projects. */
   .pet-slide,
   .hero-slide {
-    transition: none;
+    transition: opacity 0.8s ease-in-out !important;
   }
 }
