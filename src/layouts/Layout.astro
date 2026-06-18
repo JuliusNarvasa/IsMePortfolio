@@ -13,7 +13,7 @@ import '../styles/global.css';
 ---
 
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -43,6 +43,19 @@ import '../styles/global.css';
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
   <body>
+    {/* FOUC prevention: resolve theme synchronously before first paint.
+        Runs before the slot renders so `data-theme` is set on <html> in time
+        for the initial CSS to resolve. Storage first, then system pref. */}
+    <script is:inline>
+      (function () {
+        var stored = null;
+        try { stored = localStorage.getItem('theme'); } catch (e) { /* storage blocked */ }
+        var theme = (stored === 'light' || stored === 'dark')
+          ? stored
+          : (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
     <slot />
   </body>
 </html>

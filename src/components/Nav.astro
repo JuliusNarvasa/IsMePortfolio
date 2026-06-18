@@ -35,11 +35,18 @@ const navLinks = [
       ))}
     </ul>
 
-    {/* Theme indicator */}
-    <div class="flex items-center gap-2">
-      <span class="inline-block h-2 w-2 rounded-full bg-success"></span>
-      <span class="font-mono-sm text-text-dim">Dark</span>
-    </div>
+    {/* Theme toggle — label visibility is driven by CSS using the
+        `data-theme` attribute on <html> (set in Layout.astro). JS keeps
+        the `aria-label` in sync and persists the choice to localStorage. */}
+    <button
+      type="button"
+      class="font-mono-sm text-text-dim transition-colors duration-fast hover:text-text"
+      data-theme-toggle
+      aria-label="Toggle color theme"
+    >
+      <span data-theme-label-dark>[ Dark ]</span>
+      <span data-theme-label-light>[ Light ]</span>
+    </button>
   </div>
 </nav>
 
@@ -78,4 +85,27 @@ const navLinks = [
   );
 
   sections.forEach((section) => observer.observe(section));
+
+  // Theme toggle
+  const themeToggle = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+  const root = document.documentElement;
+
+  if (themeToggle) {
+    const syncToggle = () => {
+      const current = root.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+      const next = current === 'dark' ? 'light' : 'dark';
+      themeToggle.setAttribute('aria-label', `Switch to ${next} theme`);
+    };
+
+    // Initialise aria-label from the resolved theme.
+    syncToggle();
+
+    themeToggle.addEventListener('click', () => {
+      const current = root.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+      const next = current === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch (e) { /* storage blocked */ }
+      syncToggle();
+    });
+  }
 </script>

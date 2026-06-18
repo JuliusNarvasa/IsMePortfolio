@@ -61,12 +61,28 @@
 
     {/* Slideshow column — desktop only */}
     <div class="hero-slideshow relative hidden h-[600px] w-[500px] flex-shrink-0 lg:block" data-reveal data-reveal-delay="200">
-      <img src="/heroimages/1.jpg" alt="" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover" />
-      <img src="/heroimages/2.jpg" alt="" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover" />
-      <img src="/heroimages/3.jpg" alt="" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover" />
-      <img src="/heroimages/4.jpg" alt="" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover" />
-      <img src="/heroimages/5.jpg" alt="" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover" />
-      <img src="/heroimages/6.jpg" alt="" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover" />
+      <img src="/heroimages/1.jpg" alt="" role="button" tabindex="0" aria-label="View image full size" data-hero-slide-index="0" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover" />
+      <img src="/heroimages/2.jpg" alt="" role="button" tabindex="0" aria-label="View image full size" data-hero-slide-index="1" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover" />
+      <img src="/heroimages/3.jpg" alt="" role="button" tabindex="0" aria-label="View image full size" data-hero-slide-index="2" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover" />
+      <img src="/heroimages/4.jpg" alt="" role="button" tabindex="0" aria-label="View image full size" data-hero-slide-index="3" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover" />
+      <img src="/heroimages/5.jpg" alt="" role="button" tabindex="0" aria-label="View image full size" data-hero-slide-index="4" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover" />
+      <img src="/heroimages/6.jpg" alt="" role="button" tabindex="0" aria-label="View image full size" data-hero-slide-index="5" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover" />
+
+      {/* Lightbox — single instance, positioned at the end of the slideshow
+          column. `position: fixed` escapes the column's stacking context so
+          the lightbox covers the whole viewport regardless of placement. */}
+      <div
+        class="lightbox"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Image viewer"
+        data-lightbox
+        hidden
+      >
+        <div class="lightbox-backdrop" data-lightbox-backdrop></div>
+        <img class="lightbox-image" alt="" data-lightbox-image tabindex="0" />
+        <button type="button" class="lightbox-close" aria-label="Close" data-lightbox-close>×</button>
+      </div>
     </div>
   </div>
 </header>

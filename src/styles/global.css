@@ -74,24 +74,43 @@
   --glass-blur: saturate(140%) blur(12px);
 }
 
-/* Reserved for future light theme */
+/* Light theme — same teal accent, inverted surfaces.
+   Accent shifts from teal-500 to teal-600 for AA contrast on white. */
 [data-theme="light"] {
+  /* Surfaces */
   --bg:                #F7F8FA;
   --bg-elevated:       #FFFFFF;
   --bg-overlay:        #FFFFFF;
   --bg-glass:          rgba(255, 255, 255, 0.7);
   --bg-glass-strong:   rgba(255, 255, 255, 0.9);
 
+  /* Text */
   --text:              #0B0F14;
   --text-muted:        #5C616A;
   --text-dim:          #8A93A0;
 
+  /* Accent — teal-600 for readable contrast on white */
+  --accent:            #0D9488;
+  --accent-hover:      #0F766E;
+  --accent-muted:      rgba(13, 148, 136, 0.12);
+  --accent-glow:       rgba(13, 148, 136, 0.30);
+  --accent-border:     rgba(13, 148, 136, 0.45);
+
+  /* Borders */
   --border:            rgba(11, 15, 20, 0.08);
   --border-strong:     rgba(11, 15, 20, 0.14);
 
+  /* Status */
+  --success:           #22C55E;
+  --success-muted:     rgba(34, 197, 94, 0.18);
+  --warning:           #F59E0B;
+  --danger:            #EF4444;
+
+  /* Shadows */
   --shadow-subtle:     0 1px 2px rgba(11, 15, 20, 0.06);
   --shadow-glass:      0 8px 32px rgba(11, 15, 20, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6);
   --shadow-elevated:   0 12px 48px rgba(11, 15, 20, 0.12);
+  --shadow-accent-glow: 0 0 24px rgba(13, 148, 136, 0.20);
 }
 
 html {
@@ -99,6 +118,9 @@ html {
   color: var(--text);
   font-family: theme('fontFamily.sans');
   scroll-behavior: smooth;
+  /* Animate just the main surface and text color on theme switch.
+     Child surfaces (cards, glass) snap — this keeps the toggle subtle. */
+  transition: background-color 200ms ease, color 200ms ease;
 }
 
 body {
@@ -140,12 +162,87 @@ body {
 /* Hero slideshow crossfade */
 .hero-slide {
   opacity: 0;
+  pointer-events: none;
+  cursor: zoom-in;
   transition: opacity 800ms ease-in-out;
   will-change: opacity;
 }
 .hero-slide.is-active {
   opacity: 1;
+  pointer-events: auto;
 }
+
+/* Hero lightbox — full-screen image viewer
+   - `hidden` attribute is toggled by JS; we force `display: none` so the
+     lightbox never intercepts pointer events when closed.
+   - The `is-open` class drives the opacity/pointer-events transition for
+     show/hide without needing to coordinate the `hidden` attribute timing. */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms ease;
+}
+.lightbox.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.lightbox[hidden] {
+  display: none !important;
+}
+.lightbox-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.9);
+  cursor: zoom-out;
+}
+.lightbox-image {
+  position: relative;
+  z-index: 1;
+  max-width: 90vw;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: var(--radius-md);
+}
+.lightbox-close {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  font-family: theme('fontFamily.mono');
+  font-size: 18px;
+  line-height: 1;
+  /* Always light — the backdrop is always dark (rgba(0,0,0,0.9)), so the
+     close button must be readable on it regardless of the active theme. */
+  color: #E6EAF0;
+  background: rgba(17, 22, 29, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: border-color 150ms var(--ease-out-snappy),
+              background 150ms var(--ease-out-snappy),
+              color 150ms var(--ease-out-snappy);
+}
+.lightbox-close:hover {
+  border-color: var(--accent);
+  background: var(--accent-muted);
+  color: var(--accent);
+}
+
+/* Theme toggle — show one label per theme, hide the other.
+   Driven by the `data-theme` attribute set in Layout.astro's inline script. */
+[data-theme="dark"]  [data-theme-label-light] { display: none; }
+[data-theme="light"] [data-theme-label-dark]  { display: none; }
 
 /* Pet-projects slideshow crossfade */
 .pet-slide {
