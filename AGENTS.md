@@ -145,4 +145,5 @@ Static build (`npm run build` → `dist/`) is published to `me.bambaw-tumba.com`
 ## Branches
 
 - **`master`** — production-ready. What gets deployed.
-- **`funbranch`** — separate branch for work in progress, experiments, or things not ready for prod. Deployments to `me.bambaw-tumba.com` come from `master` only.
+- **`funbranch`** — separate branch for work in progress, experiments, or things not ready for prod.
+- Any branch can be deployed to `me.bambaw-tumba.com` — there's no branch restriction.
