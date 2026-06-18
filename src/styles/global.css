@@ -147,6 +147,29 @@ body {
   opacity: 1;
 }
 
+/* Pet-projects slideshow crossfade */
+.pet-slide {
+  opacity: 0;
+  transition: opacity 800ms ease-in-out;
+  will-change: opacity;
+}
+.pet-slide.is-active {
+  opacity: 1;
+}
+
+/* Pet-projects list active state (aria-current set by JS) */
+[data-pet-list-item][aria-current="true"] {
+  border-color: var(--accent);
+  background: var(--bg-glass-strong);
+  box-shadow: var(--shadow-accent-glow);
+}
+[data-pet-list-item] [data-pet-index] {
+  color: var(--text-dim);
+}
+[data-pet-list-item][aria-current="true"] [data-pet-index] {
+  color: var(--accent);
+}
+
 /* Tree node styles */
 .tree {
   padding-left: calc(var(--depth, 0) * 16px);
@@ -185,5 +208,9 @@ body {
   [data-reveal] {
     opacity: 1;
     transform: none;
+  }
+  .pet-slide,
+  .hero-slide {
+    transition: none;
   }
 }

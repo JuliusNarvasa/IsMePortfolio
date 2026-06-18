@@ -39,45 +39,60 @@ const projects = [
     title: 'Homelab',
     problem: 'Recreate a part of the internet locally.',
     solution: 'A Proxmox box running Immich, Jellyfin, Vaultwarden, qBittorrent, and a few too many things.',
-    image: '/images/personality/homelab.jpg',
-    alt: 'A homelab monitor displaying a wall of red systemd service-failed messages.',
-    side: 'left' as const,
+    images: [
+      { src: '/images/personality/homelab-1.png', alt: 'The Immich photo library UI, self-hosted and showing ~4 TB of personal photos indexed and searchable.' },
+      { src: '/images/personality/homelab-2.jpg', alt: 'The Jellyfin home screen with Anime and Movies libraries set up on a local server.' },
+      { src: '/images/personality/homelab-3.jpg', alt: 'The Vaultwarden login screen — Bitwarden’s unofficial rewrite, running on a Raspberry Pi-class box.' },
+      { src: '/images/personality/homelab-4.jpg', alt: 'A homelab monitor displaying a wall of red systemd service-failed messages — the day the boxes collectively gave up.' },
+      { src: '/images/personality/homelab-5.jpg', alt: 'A stock Globe at Home ISP router with a troubleshooting sticker — the edge of the network before the real homelab starts.' },
+      { src: '/images/personality/homelab-6.jpg', alt: 'A TP-Link ER605 Omada router being held up for a photo — the upgrade that retired the ISP one.' },
+      { src: '/images/personality/homelab-7.jpg', alt: 'The back of a small form factor PC with USB, Ethernet, and power cables plugged in — a new homelab node being wired up.' },
+      { src: '/images/personality/homelab-8.jpg', alt: 'Inside a mini PC chassis: two Seagate drives (a 4 TB BarraCuda and a 6 TB Enterprise) seated where an optical drive used to be.' },
+    ],
   },
   {
     title: 'Re-Fuel',
     problem: 'I wanted to know whether the gas I bought last week was actually a good deal, and to catch price changes the moment they happened.',
     solution: 'A mobile app that auto-logs every fill-up with GPS and reads the price board with the camera.',
-    image: '/images/personality/refuel.jpg',
-    alt: 'Re-Fuel app showing detected gas prices for a Phoenix Super LPG station — Premium 98, Premium 95, Super Regular, and Biodiesel.',
+    images: [
+      { src: '/images/personality/refuel-1.jpg', alt: 'Re-Fuel app showing detected gas prices for a Phoenix Super LPG station — Premium 98, Premium 95, Super Regular, and Biodiesel.' },
+      { src: '/images/personality/refuel-2.jpg', alt: 'Re-Fuel in driving mode, automatically capturing a price board at a Phoenix station via the rear camera.' },
+      { src: '/images/personality/refuel-3.jpg', alt: 'A Re-Fuel scan result with detection failed on both stations — honest documentation of the OCR’s bad days.' },
+    ],
     href: 'https://refuel.bambaw-tumba.com',
-    side: 'right' as const,
   },
   {
     title: 'NetworkWatcher',
     problem: 'I had no idea if my ISP failover was actually working.',
     solution: 'A self-hosted Grafana dashboard that graphs latency and downtime per ISP in real time.',
-    image: '/images/personality/networkwatcher.bmp',
-    alt: 'NetworkWatcher Grafana dashboard showing ISP latency and uptime per ISP.',
-    side: 'left' as const,
+    images: [
+      { src: '/images/personality/networkwatcher-1.bmp', alt: 'NetworkWatcher Grafana dashboard showing ISP latency and uptime per ISP.' },
+    ],
   },
   {
     title: 'Local Llama',
     problem: 'Cloud LLM APIs were getting expensive and laggy for daily use.',
     solution: 'A local llama.cpp + ROCm rig running a 30B model on my GPU, free of charge.',
-    image: '/images/personality/locallama.jpg',
-    alt: 'A locally-hosted LLM chat showing a real-time token counter and an in-flight API request.',
-    side: 'right' as const,
+    images: [
+      { src: '/images/personality/locallama-1.jpg', alt: 'A locally-hosted LLM chat showing a real-time token counter (32.8k) and an in-flight API request.' },
+      { src: '/images/personality/locallama-2.bmp', alt: 'A local llama.cpp chat session running on a consumer AMD GPU, no cloud involved.' },
+    ],
   },
   {
     title: 'GPU VRAM Monitor',
     problem: 'Windows could not tell me which process was eating my VRAM.',
     solution: 'A small WPF tool that shows per-process VRAM usage for AMD GPUs.',
-    image: '/images/projects/gpuvrammonitor.png',
-    alt: 'GPU VRAM Monitor — a WPF tool showing per-process VRAM usage for an AMD Radeon RX 7800 XT.',
+    images: [
+      { src: '/images/projects/gpuvrammonitor.png', alt: 'GPU VRAM Monitor — a WPF tool showing per-process VRAM usage for an AMD Radeon RX 7800 XT.' },
+    ],
     href: 'https://github.com/JuliusNarvasa/GPUVramMonitor',
-    side: 'left' as const,
   },
 ];
+
+// JSON payload for the inline auto-cycle script. Each entry is a flat array of
+// image source strings for one project — all the script needs to know is how
+// many images each project has, so it can decide when to wrap to the next.
+const petProjectsImageSources = projects.map((p) => p.images.map((i) => i.src));
 ---
 
 {/* Section A — Beyond the Code (narrative + interests) */}
@@ -209,54 +224,42 @@ const projects = [
   </div>
 </section>
 
-{/* Section B — Built Because It Annoyed Me (pet projects) */}
+{/* Section B — Built Because It Annoyed Me (pet projects) — master/detail */}
 <section
   id="pet-projects"
   class="min-h-screen flex flex-col justify-center py-section px-6"
   aria-labelledby="section-pet-projects-title"
 >
   <div class="mx-auto w-full max-w-content">
-    <div class="mb-12" data-reveal>
+    <div class="mb-10" data-reveal>
       <p class="font-mono-sm text-accent mb-2">// pet_projects.built_from_frustration</p>
       <h3 id="section-pet-projects-title" class="text-h3 text-text mb-2">Built Because It Annoyed Me</h3>
-      <p class="text-body text-text-muted max-w-prose">Side projects born from small daily annoyances.</p>
+      <p class="text-body text-text-muted max-w-prose">Side projects born from small daily annoyances. Pick one — the right side cycles on its own.</p>
     </div>
 
-    {/* 5 feature rows, stacked. Each row alternates image/text sides on desktop. */}
-    <div class="space-y-16 lg:space-y-20">
-      {projects.map((project, i) => (
-        <div
-          class="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-12 lg:items-center"
-          data-reveal
-          data-reveal-delay={String(i * 80)}
-        >
-          {/* Image column */}
-          <div class={project.side === 'left' ? 'lg:order-1' : 'lg:order-2'}>
-            <div class="overflow-hidden rounded-lg border border-border bg-bg-elevated shadow-subtle transition-all duration-slow ease-out-snappy hover:-translate-y-1 hover:border-accent hover:shadow-accent-glow">
-              <img
-                src={project.image}
-                alt={project.alt}
-                class="h-full w-full object-cover object-top"
-                loading="lazy"
-                style="aspect-ratio: 16 / 9;"
-              />
-            </div>
-          </div>
-
-          {/* Text column */}
-          <div class={project.side === 'left' ? 'lg:order-2' : 'lg:order-1'}>
-            <p class="font-mono-sm text-accent mb-3">{`0${i + 1} —`}</p>
-            <h4 class="text-h3 text-text mb-4">{project.title}</h4>
-            <p class="text-body text-text-muted mb-3 leading-relaxed">
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-[2fr_3fr] lg:gap-8">
+      {/* Left: selectable list of projects */}
+      <div class="flex flex-col gap-3" role="tablist" aria-label="Pet projects" data-reveal data-reveal-delay="80">
+        {projects.map((project, i) => (
+          <button
+            type="button"
+            class="w-full text-left rounded-lg border border-border bg-bg-glass p-4 backdrop-blur-glass transition-all duration-base ease-out-snappy hover:-translate-y-0.5 hover:border-border-strong focus:outline-none"
+            data-pet-list-item
+            data-pet-project-index={i}
+            aria-current={i === 0 ? 'true' : 'false'}
+          >
+            <span data-pet-index class="font-mono-sm mb-2 block">0{i + 1}</span>
+            <h4 data-pet-title class="text-h4 text-text mb-3">{project.title}</h4>
+            <p class="text-body-sm text-text-muted mb-2 leading-relaxed">
               <span class="font-mono-sm text-accent mr-1.5">// problem:</span>
               {project.problem}
             </p>
-            <p class="text-body text-text leading-relaxed">
+            <p class="text-body-sm text-text leading-relaxed">
               <span class="font-mono-sm text-accent mr-1.5">→ fix:</span>
               {project.solution}
             </p>
             {project.href && (
-              <div class="mt-5">
+              <div class="mt-3">
                 <a
                   href={project.href}
                   target="_blank"
@@ -267,9 +270,121 @@ const projects = [
                 </a>
               </div>
             )}
+          </button>
+        ))}
+      </div>
+
+      {/* Right: auto-cycling slideshow for the active project */}
+      <div
+        class="relative overflow-hidden rounded-lg border border-border bg-bg-elevated min-h-[280px] lg:aspect-[4/3] lg:min-h-0"
+        data-pet-slideshow
+        data-reveal
+        data-reveal-delay="160"
+        aria-live="polite"
+        aria-atomic="false"
+      >
+        {projects.map((project, pi) => (
+          <div data-pet-project-index={pi}>
+            {project.images.map((img, ii) => (
+              <img
+                class="pet-slide absolute inset-0 h-full w-full object-cover"
+                src={img.src}
+                alt={img.alt}
+                loading="lazy"
+                data-pet-image-index={ii}
+              />
+            ))}
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   </div>
 </section>
+
+{/* Image-source data for the inline auto-cycle script (read via JSON.parse). */}
+<script
+  is:inline
+  type="application/json"
+  id="pet-projects-data"
+  set:html={JSON.stringify(petProjectsImageSources)}
+></script>
+
+{/* Auto-cycle script: rotates through the active project's images, then
+    advances to the next project and resets. Clicking a list item jumps to
+    that project and restarts the 5s timer. Crossfade is CSS-driven via the
+    .is-active class — see .pet-slide / .pet-slide.is-active in global.css. */}
+<script is:inline>
+  (() => {
+    const dataEl = document.getElementById('pet-projects-data');
+    const slideshow = document.querySelector('[data-pet-slideshow]');
+    const listItems = document.querySelectorAll('[data-pet-list-item]');
+    if (!dataEl || !slideshow || listItems.length === 0) return;
+
+    let projects;
+    try { projects = JSON.parse(dataEl.textContent || '[]'); }
+    catch (_) { return; }
+    if (!Array.isArray(projects) || projects.length === 0) return;
+
+    const INTERVAL_MS = 5000;
+    let activeProject = 0;
+    let activeImage = 0;
+    let intervalId = null;
+
+    const allSlides = slideshow.querySelectorAll('.pet-slide');
+
+    function showImage() {
+      allSlides.forEach((el) => el.classList.remove('is-active'));
+      const projectGroup = slideshow.querySelector(
+        '[data-pet-project-index="' + activeProject + '"]'
+      );
+      if (!projectGroup) return;
+      const target = projectGroup.querySelector(
+        '[data-pet-image-index="' + activeImage + '"]'
+      );
+      if (target) target.classList.add('is-active');
+    }
+
+    function showListItem() {
+      listItems.forEach((btn, i) => {
+        if (i === activeProject) btn.setAttribute('aria-current', 'true');
+        else btn.removeAttribute('aria-current');
+      });
+    }
+
+    function advance() {
+      const currentImages = projects[activeProject];
+      if (activeImage < currentImages.length - 1) {
+        activeImage++;
+      } else {
+        activeImage = 0;
+        activeProject = (activeProject + 1) % projects.length;
+        showListItem();
+      }
+      showImage();
+    }
+
+    function startInterval() {
+      if (intervalId !== null) clearInterval(intervalId);
+      intervalId = setInterval(advance, INTERVAL_MS);
+    }
+
+    // Initial state: project 0, image 0.
+    showListItem();
+    showImage();
+    startInterval();
+
+    // Click handler: jump to that project, reset image, restart the 5s timer.
+    listItems.forEach((btn, i) => {
+      btn.addEventListener('click', (e) => {
+        // If the click landed on the CTA link inside the button, let the
+        // browser handle the navigation and don't change the active project.
+        if (e.target && e.target.closest && e.target.closest('a')) return;
+        activeProject = i;
+        activeImage = 0;
+        showListItem();
+        showImage();
+        startInterval();
+      });
+    });
+  })();
+</script>
