@@ -226,8 +226,14 @@ body {
    transitions, no max-height / grid-template-rows tricks. */
 [data-pet-list-item] [data-pet-details] {
   overflow: hidden;
-  height: 0;
-  margin-top: 0;
+}
+[data-pet-list-item]:not([aria-current="true"]) [data-pet-details] {
+  /* !important is the safety net: even if a stale Web Animations fill or a
+     missed inline-style write leaves an inactive tile's details non-zero,
+     this rule forces the collapse. The active-tile rule below has equal
+     specificity, so it wins for aria-current="true" without needing !important. */
+  height: 0 !important;
+  margin-top: 0 !important;
 }
 [data-pet-list-item][aria-current="true"] [data-pet-details] {
   height: auto;

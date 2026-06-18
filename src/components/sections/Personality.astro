@@ -354,8 +354,27 @@ const petProjectsImageSources = projects.map((p) => p.images.map((i) => i.src));
 
     function showListItem() {
       listItems.forEach((btn, i) => {
-        if (i === activeProject) btn.setAttribute('aria-current', 'true');
-        else btn.removeAttribute('aria-current');
+        const details = btn.querySelector('[data-pet-details]');
+        if (i === activeProject) {
+          btn.setAttribute('aria-current', 'true');
+          // Force-expanded: pin the inline height so the text is visible
+          // even if a previous collapse/expand animation was interrupted.
+          // The Web Animations API path can leave stale state after rapid
+          // clicks or backgrounded-tab timer pile-ups — this guarantees
+          // the active tile's details are always rendered.
+          if (details) {
+            details.getAnimations().forEach((a) => a.cancel());
+            details.style.height = 'auto';
+            details.style.marginTop = '0.75rem';
+          }
+        } else {
+          btn.removeAttribute('aria-current');
+          if (details) {
+            details.getAnimations().forEach((a) => a.cancel());
+            details.style.height = '0px';
+            details.style.marginTop = '0';
+          }
+        }
       });
     }
 
