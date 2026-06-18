@@ -5,55 +5,88 @@
   {/* Ambient accent blob */}
   <div class="pointer-events-none absolute -right-40 -top-40 h-[800px] w-[800px] rounded-full bg-accent-glow opacity-12 blur-[800px]"></div>
 
-  <div class="relative mx-auto max-w-narrow">
-    {/* Eyebrow */}
-    <p class="font-mono-sm uppercase tracking-widest text-accent mb-4" data-reveal data-reveal-delay="0">
-      ~/developer/julius
-    </p>
+  <div class="relative z-10 mx-auto flex w-full max-w-wide items-center gap-12 lg:gap-16">
+    {/* Text column */}
+    <div class="flex-1">
+      {/* Eyebrow */}
+      <p class="font-mono-sm uppercase tracking-widest text-accent mb-4" data-reveal data-reveal-delay="0">
+        ~/developer/julius
+      </p>
 
-    {/* Name */}
-    <h1 class="text-h1 md:text-display font-semibold text-text mb-3" data-reveal data-reveal-delay="80">
-      Julius Narvasa
-    </h1>
+      {/* Name */}
+      <h1 class="text-h1 md:text-display font-semibold text-text mb-3" data-reveal data-reveal-delay="80">
+        Julius Narvasa
+      </h1>
 
-    {/* Role */}
-    <p class="text-h4 text-text-muted mb-6" data-reveal data-reveal-delay="160">
-      Software Developer
-    </p>
+      {/* Role */}
+      <p class="text-h4 text-text-muted mb-6" data-reveal data-reveal-delay="160">
+        Software Developer
+      </p>
 
-    {/* Lead */}
-    <p class="text-body-lg text-text-muted max-w-prose mb-6" data-reveal data-reveal-delay="240">
-      I build backend systems, self-hosted AI infrastructure, and developer tooling. Currently exploring local LLMs and computer vision pipelines on AMD hardware.
-    </p>
+      {/* Lead */}
+      <p class="text-body-lg text-text-muted max-w-prose mb-6" data-reveal data-reveal-delay="240">
+        I build backend systems, self-hosted AI infrastructure, and developer tooling. Currently exploring local LLMs and computer vision pipelines on AMD hardware.
+      </p>
 
-    {/* Interests */}
-    <p class="font-mono-lg text-text-muted mb-8" data-reveal data-reveal-delay="320">
-      <span>backend</span>
-      <span class="text-accent-muted mx-2">·</span>
-      <span>apis</span>
-      <span class="text-accent-muted mx-2">·</span>
-      <span>cloud infra</span>
-      <span class="text-accent-muted mx-2">·</span>
-      <span>local ai</span>
-      <span class="text-accent-muted mx-2">·</span>
-      <span>self-hosted systems</span>
-    </p>
+      {/* Interests */}
+      <p class="font-mono-lg text-text-muted mb-8" data-reveal data-reveal-delay="320">
+        <span>backend</span>
+        <span class="text-accent-muted mx-2">·</span>
+        <span>apis</span>
+        <span class="text-accent-muted mx-2">·</span>
+        <span>cloud infra</span>
+        <span class="text-accent-muted mx-2">·</span>
+        <span>local ai</span>
+        <span class="text-accent-muted mx-2">·</span>
+        <span>self-hosted systems</span>
+      </p>
 
-    {/* CTAs */}
-    <div class="flex items-center gap-3" data-reveal data-reveal-delay="400">
-      <a
-        href="#projects"
-        class="inline-flex items-center rounded-md bg-accent px-5 py-2.5 font-mono text-text shadow-subtle transition-all duration-base ease-out-snappy hover:bg-accent-hover hover:shadow-accent-glow active:scale-95"
-        style="color: #0B0F14; font-weight: 500;"
-      >
-        View Projects →
-      </a>
-      <a
-        href="#contact"
-        class="inline-flex items-center rounded-md border border-border bg-bg-glass px-5 py-2.5 font-mono text-text backdrop-blur-glass transition-all duration-base ease-out-snappy hover:border-border-strong hover:shadow-glass active:scale-95"
-      >
-        Contact
-      </a>
+      {/* CTAs */}
+      <div class="flex items-center gap-3" data-reveal data-reveal-delay="400">
+        <a
+          href="#projects"
+          class="inline-flex items-center rounded-md bg-accent px-5 py-2.5 font-mono text-text shadow-subtle transition-all duration-base ease-out-snappy hover:bg-accent-hover hover:shadow-accent-glow active:scale-95"
+          style="color: #0B0F14; font-weight: 500;"
+        >
+          View Projects →
+        </a>
+        <a
+          href="#contact"
+          class="inline-flex items-center rounded-md border border-border bg-bg-glass px-5 py-2.5 font-mono text-text backdrop-blur-glass transition-all duration-base ease-out-snappy hover:border-border-strong hover:shadow-glass active:scale-95"
+        >
+          Contact
+        </a>
+      </div>
+    </div>
+
+    {/* Slideshow column — desktop only */}
+    <div class="hero-slideshow relative hidden h-[520px] w-[400px] flex-shrink-0 lg:block" data-reveal data-reveal-delay="200">
+      {/* Fade mask: blends edges into background */}
+      <div class="pointer-events-none absolute inset-0 z-20" style="
+        mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+        -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+      "></div>
+
+      {/* Images */}
+      <img src="/heroimages/1.jpg" alt="" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover opacity-0" style="animation: heroFadeIn 16s linear infinite; animation-delay: 0s;" />
+      <img src="/heroimages/2.jpg" alt="" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover opacity-0" style="animation: heroFadeIn 16s linear infinite; animation-delay: 4s;" />
+      <img src="/heroimages/3.jpg" alt="" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover opacity-0" style="animation: heroFadeIn 16s linear infinite; animation-delay: 8s;" />
+      <img src="/heroimages/4.jpg" alt="" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover opacity-0" style="animation: heroFadeIn 16s linear infinite; animation-delay: 12s;" />
+      <img src="/heroimages/5.jpg" alt="" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover opacity-0" style="animation: heroFadeIn 16s linear infinite; animation-delay: 16s;" />
     </div>
   </div>
 </header>
+
+<style>
+  @keyframes heroFadeIn {
+    0%        { opacity: 0; transform: scale(1.05); }
+    5%        { opacity: 1; transform: scale(1); }
+    20%       { opacity: 1; transform: scale(1); }
+    25%       { opacity: 0; transform: scale(0.98); }
+    100%      { opacity: 0; }
+  }
+
+  .hero-slide {
+    will-change: opacity, transform;
+  }
+</style>
