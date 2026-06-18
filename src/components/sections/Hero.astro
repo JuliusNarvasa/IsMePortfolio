@@ -61,33 +61,56 @@
 
     {/* Slideshow column — desktop only */}
     <div class="hero-slideshow relative hidden h-[600px] w-[500px] flex-shrink-0 lg:block" data-reveal data-reveal-delay="200">
-      {/* Images — 25s cycle, 5s per image, 1.5s crossfade */}
-      <img src="/heroimages/1.jpg" alt="" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover" style="animation: heroFadeIn 25s linear infinite; animation-delay: 0s;" />
-      <img src="/heroimages/2.jpg" alt="" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover" style="animation: heroFadeIn 25s linear infinite; animation-delay: 5s;" />
-      <img src="/heroimages/3.jpg" alt="" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover" style="animation: heroFadeIn 25s linear infinite; animation-delay: 10s;" />
-      <img src="/heroimages/4.jpg" alt="" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover" style="animation: heroFadeIn 25s linear infinite; animation-delay: 15s;" />
-      <img src="/heroimages/5.jpg" alt="" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover" style="animation: heroFadeIn 25s linear infinite; animation-delay: 20s;" />
+      <img src="/heroimages/1.jpg" alt="" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover" style="opacity:1" />
+      <img src="/heroimages/2.jpg" alt="" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover" style="opacity:0" />
+      <img src="/heroimages/3.jpg" alt="" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover" style="opacity:0" />
+      <img src="/heroimages/4.jpg" alt="" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover" style="opacity:0" />
+      <img src="/heroimages/5.jpg" alt="" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover" style="opacity:0" />
     </div>
   </div>
 </header>
 
+<script>
+  function initSlideshow() {
+    const slides = document.querySelectorAll<HTMLImageElement>('.hero-slide');
+    if (slides.length === 0) return;
+
+    let current = 0;
+    const total = slides.length;
+    const showDuration = 5000;
+    const fadeDuration = 800;
+
+    function showSlide(index: number) {
+      slides.forEach((s, i) => {
+        if (i === index) {
+          s.style.transition = `opacity ${fadeDuration}ms ease-in-out`;
+          s.style.opacity = '1';
+        } else if (i === (index - 1 + total) % total) {
+          s.style.transition = `opacity ${fadeDuration}ms ease-in-out`;
+          s.style.opacity = '0';
+        } else {
+          s.style.transition = 'none';
+          s.style.opacity = '0';
+        }
+      });
+    }
+
+    setInterval(() => {
+      current = (current + 1) % total;
+      showSlide(current);
+    }, showDuration);
+  }
+
+  document.addEventListener('DOMContentLoaded', initSlideshow);
+</script>
+
 <style>
-  /* Mask on the slideshow container so images blend at edges */
   .hero-slideshow {
     mask-image: radial-gradient(ellipse 90% 85% at 50% 50%, black 30%, transparent 100%);
     -webkit-mask-image: radial-gradient(ellipse 90% 85% at 50% 50%, black 30%, transparent 100%);
   }
 
-  @keyframes heroFadeIn {
-    0%        { opacity: 0; }
-    6%        { opacity: 1; }
-    18%       { opacity: 1; }
-    24%       { opacity: 0; }
-    100%      { opacity: 0; }
-  }
-
   .hero-slide {
     will-change: opacity;
-    animation-fill-mode: both;
   }
 </style>
