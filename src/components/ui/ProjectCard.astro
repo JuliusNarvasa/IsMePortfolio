@@ -21,7 +21,7 @@ interface Props {
 const { slug, title, category, problem, challenges, tech, links, screenshot } = Astro.props;
 ---
 
-<article class="group rounded-lg border border-border bg-bg-elevated shadow-subtle transition-all duration-slow ease-out-snappy hover:-translate-y-1 hover:border-border-strong hover:shadow-elevated focus-within:border-accent focus-within:shadow-accent-glow">
+<article class="group rounded-lg border border-border bg-bg-elevated shadow-subtle transition-all duration-slow ease-out-snappy hover:-translate-y-1 hover:border-accent hover:shadow-accent-glow focus-within:border-accent focus-within:shadow-accent-glow">
   {/* Screenshot area */}
   <div class="relative overflow-hidden rounded-t-lg" style="aspect-ratio: 16 / 9;">
     {screenshot.src ? (
