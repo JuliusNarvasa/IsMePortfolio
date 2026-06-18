@@ -69,8 +69,13 @@ const projects = [
 ];
 ---
 
-<section id="beyond-the-code" class="py-section px-6" aria-labelledby="section-personality-title">
-  <div class="mx-auto max-w-content">
+{/* Section A — Beyond the Code (narrative + interests) */}
+<section
+  id="beyond-the-code"
+  class="min-h-screen flex flex-col justify-center py-section px-6"
+  aria-labelledby="section-personality-title"
+>
+  <div class="mx-auto w-full max-w-content">
     <div data-reveal>
       <SectionHeader
         eyebrow="00 — Beyond the code"
@@ -190,27 +195,33 @@ const projects = [
         ))}
       </div>
     </div>
+  </div>
+</section>
 
-    {/* Built Because It Annoyed Me — subsection */}
-    <div class="mt-20 lg:mt-24">
-      <div class="mb-8" data-reveal>
-        <p class="font-mono-sm text-accent mb-2">// pet_projects.built_from_frustration</p>
-        <h3 class="text-h3 text-text mb-2">Built Because It Annoyed Me</h3>
-        <p class="text-body text-text-muted max-w-prose">Side projects born from small daily annoyances.</p>
-      </div>
+{/* Section B — Built Because It Annoyed Me (pet projects) */}
+<section
+  id="pet-projects"
+  class="min-h-screen flex flex-col justify-center py-section px-6"
+  aria-labelledby="section-pet-projects-title"
+>
+  <div class="mx-auto w-full max-w-content">
+    <div class="mb-8" data-reveal>
+      <p class="font-mono-sm text-accent mb-2">// pet_projects.built_from_frustration</p>
+      <h3 id="section-pet-projects-title" class="text-h3 text-text mb-2">Built Because It Annoyed Me</h3>
+      <p class="text-body text-text-muted max-w-prose">Side projects born from small daily annoyances.</p>
+    </div>
 
-      {/* 4 frustration cards: horizontal scroll on mobile/tablet, 4-col grid on desktop */}
-      <div class="scroll-x -mx-6 flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-2 lg:mx-0 lg:grid lg:grid-cols-4 lg:gap-5 lg:overflow-visible lg:px-0 lg:pb-0">
-        {projects.map((project, i) => (
-          <div
-            class="w-[78vw] max-w-[300px] flex-shrink-0 snap-start lg:w-auto lg:max-w-none"
-            data-reveal
-            data-reveal-delay={String(i * 80)}
-          >
-            <FrustrationCard {...project} />
-          </div>
-        ))}
-      </div>
+    {/* 4 frustration cards: horizontal snap-scroll on mobile/tablet, 2-col grid on desktop */}
+    <div class="scroll-x -mx-6 flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-2 lg:mx-0 lg:grid lg:grid-cols-2 lg:gap-6 lg:overflow-visible lg:px-0 lg:pb-0">
+      {projects.map((project, i) => (
+        <div
+          class="w-[78vw] max-w-[300px] flex-shrink-0 snap-start lg:w-auto lg:max-w-none"
+          data-reveal
+          data-reveal-delay={String(i * 80)}
+        >
+          <FrustrationCard {...project} />
+        </div>
+      ))}
     </div>
   </div>
 </section>

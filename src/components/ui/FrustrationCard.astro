@@ -13,7 +13,7 @@ const { title, problem, solution, image, alt, href } = Astro.props;
 
 <article class="group flex h-full flex-col overflow-hidden rounded-lg border border-border bg-bg-elevated shadow-subtle transition-all duration-slow ease-out-snappy hover:-translate-y-1 hover:border-accent hover:shadow-accent-glow focus-within:border-accent focus-within:shadow-accent-glow">
   {/* Screenshot area */}
-  <div class="relative overflow-hidden bg-bg" style="aspect-ratio: 16 / 9;">
+  <div class="relative overflow-hidden bg-bg" style="aspect-ratio: 3 / 2;">
     <img
       src={image}
       alt={alt}
@@ -23,7 +23,7 @@ const { title, problem, solution, image, alt, href } = Astro.props;
   </div>
 
   {/* Content */}
-  <div class="flex flex-1 flex-col p-5">
+  <div class="flex flex-1 flex-col p-6">
     {/* Title */}
     <h4 class="text-h4 text-text mb-3">{title}</h4>
 

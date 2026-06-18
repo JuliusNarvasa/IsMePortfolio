@@ -70,15 +70,18 @@ tailwind.config.mjs           # all design tokens live here
 The page composes sections in this fixed order. Keep the `00`-prefixed sections at the top of the file so the eyebrow numbering (`00 — Beyond the code`, `01 — Projects`, …) stays logical.
 
 ```
-Hero          (no number; full-viewport intro)
-Personality   (00 — Beyond the code; bridge between Hero and Projects)
-Projects      (01 — Projects)
-Infrastructure(02 — Infrastructure)
-AILab         (03 — AI Lab)
-Experience    (04 — Experience)
-Building      (05 — Now)
-Contact       (06 — Contact)
+Hero           (no number; full-viewport intro)
+Beyond the Code(00 — Beyond the code; narrative + interests; full-viewport)
+Pet Projects   (no number; // pet_projects.built_from_frustration; full-viewport)
+Projects       (01 — Projects)
+Infrastructure (02 — Infrastructure)
+AILab          (03 — AI Lab)
+Experience     (04 — Experience)
+Building       (05 — Now)
+Contact        (06 — Contact)
 ```
+
+Note: `Beyond the Code` and `Pet Projects` are both rendered from a single component import (`<Personality />` → `src/components/sections/Personality.astro`) but emit **two sibling `<section>` elements** with `id="beyond-the-code"` and `id="pet-projects"`. Both use `min-h-screen flex flex-col justify-center py-section px-6` so each gets its own full-viewport real estate. The pet-projects grid is `grid-cols-2` on `lg:` (2×2) and a snap-scroll horizontal carousel on mobile. The card image aspect ratio is `3 / 2`.
 
 ## Design system — read these two files first
 
