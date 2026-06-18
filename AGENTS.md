@@ -140,4 +140,9 @@ Each project is an object in the `projects` array with `slug`, `title`, `categor
 
 ## Deployment
 
-Static build (`npm run build` → `dist/`) is published to `me.bambaw-tumba.com`. Deployment is not wired up in this repo — the operator handles it out of band.
+Static build (`npm run build` → `dist/`) is published to `me.bambaw-tumba.com`. See `howtodeploy.md` for full deploy steps.
+
+## Branches
+
+- **`master`** — production-ready. What gets deployed.
+- **`funbranch`** — separate branch for work in progress, experiments, or things not ready for prod. Deployments to `me.bambaw-tumba.com` come from `master` only.
