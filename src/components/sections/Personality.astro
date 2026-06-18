@@ -249,27 +249,29 @@ const petProjectsImageSources = projects.map((p) => p.images.map((i) => i.src));
             aria-current={i === 0 ? 'true' : 'false'}
           >
             <span data-pet-index class="font-mono-sm mb-2 block">0{i + 1}</span>
-            <h4 data-pet-title class="text-h4 text-text mb-3">{project.title}</h4>
-            <p class="text-body-sm text-text-muted mb-2 leading-relaxed">
-              <span class="font-mono-sm text-accent mr-1.5">// problem:</span>
-              {project.problem}
-            </p>
-            <p class="text-body-sm text-text leading-relaxed">
-              <span class="font-mono-sm text-accent mr-1.5">→ fix:</span>
-              {project.solution}
-            </p>
-            {project.href && (
-              <div class="mt-3">
-                <a
-                  href={project.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="font-mono-sm text-accent inline-flex items-center gap-1 transition-colors duration-fast hover:text-accent-hover"
-                >
-                  view project ↗
-                </a>
-              </div>
-            )}
+            <h4 data-pet-title class="text-h4 text-text">{project.title}</h4>
+            <div data-pet-details>
+              <p class="text-body-sm text-text-muted mb-2 leading-relaxed">
+                <span class="font-mono-sm text-accent mr-1.5">// problem:</span>
+                {project.problem}
+              </p>
+              <p class="text-body-sm text-text leading-relaxed">
+                <span class="font-mono-sm text-accent mr-1.5">→ fix:</span>
+                {project.solution}
+              </p>
+              {project.href && (
+                <div class="mt-3">
+                  <a
+                    href={project.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="font-mono-sm text-accent inline-flex items-center gap-1 transition-colors duration-fast hover:text-accent-hover"
+                  >
+                    view project ↗
+                  </a>
+                </div>
+              )}
+            </div>
           </button>
         ))}
       </div>
