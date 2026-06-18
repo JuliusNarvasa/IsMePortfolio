@@ -44,6 +44,26 @@ const projects = [
     },
   },
   {
+    slug: 'portfolio',
+    title: 'Portfolio',
+    category: 'web',
+    problem: 'Needed a personal site that feels like a developer dashboard, not a corporate landing page.',
+    challenges: [
+      'Astro static site with React components',
+      'Glassmorphism design system with scroll-reveal',
+      'Hero image slideshow with CSS-only crossfade',
+    ],
+    tech: ['astro', 'react', 'typescript', 'tailwindcss'],
+    links: {
+      github: 'https://github.com/JuliusNarvasa/IsMePortfolio',
+    },
+    screenshot: {
+      src: '/og.png',
+      alt: 'Julius Narvasa portfolio site showing developer dashboard aesthetic',
+      type: 'web' as const,
+    },
+  },
+  {
     slug: 'gpuvrammonitor',
     title: 'GpuVramMonitor',
     category: 'desktop',
