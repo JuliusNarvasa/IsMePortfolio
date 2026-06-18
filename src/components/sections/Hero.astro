@@ -61,32 +61,33 @@
 
     {/* Slideshow column — desktop only */}
     <div class="hero-slideshow relative hidden h-[520px] w-[400px] flex-shrink-0 lg:block" data-reveal data-reveal-delay="200">
-      {/* Fade mask: blends edges into background */}
-      <div class="pointer-events-none absolute inset-0 z-20" style="
-        mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
-        -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
-      "></div>
-
       {/* Images */}
-      <img src="/heroimages/1.jpg" alt="" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover opacity-0" style="animation: heroFadeIn 16s linear infinite; animation-delay: 0s;" />
-      <img src="/heroimages/2.jpg" alt="" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover opacity-0" style="animation: heroFadeIn 16s linear infinite; animation-delay: 4s;" />
-      <img src="/heroimages/3.jpg" alt="" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover opacity-0" style="animation: heroFadeIn 16s linear infinite; animation-delay: 8s;" />
-      <img src="/heroimages/4.jpg" alt="" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover opacity-0" style="animation: heroFadeIn 16s linear infinite; animation-delay: 12s;" />
-      <img src="/heroimages/5.jpg" alt="" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover opacity-0" style="animation: heroFadeIn 16s linear infinite; animation-delay: 16s;" />
+      <img src="/heroimages/1.jpg" alt="" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover" style="animation: heroFadeIn 20s linear infinite; animation-delay: 0s;" />
+      <img src="/heroimages/2.jpg" alt="" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover" style="animation: heroFadeIn 20s linear infinite; animation-delay: 4s;" />
+      <img src="/heroimages/3.jpg" alt="" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover" style="animation: heroFadeIn 20s linear infinite; animation-delay: 8s;" />
+      <img src="/heroimages/4.jpg" alt="" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover" style="animation: heroFadeIn 20s linear infinite; animation-delay: 12s;" />
+      <img src="/heroimages/5.jpg" alt="" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover" style="animation: heroFadeIn 20s linear infinite; animation-delay: 16s;" />
     </div>
   </div>
 </header>
 
 <style>
+  /* Mask on the slideshow container so images blend at edges */
+  .hero-slideshow {
+    mask-image: radial-gradient(ellipse 90% 85% at 50% 50%, black 30%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 90% 85% at 50% 50%, black 30%, transparent 100%);
+  }
+
   @keyframes heroFadeIn {
-    0%        { opacity: 0; transform: scale(1.05); }
-    5%        { opacity: 1; transform: scale(1); }
+    0%        { opacity: 0; transform: scale(1.06); }
+    4%        { opacity: 1; transform: scale(1); }
     20%       { opacity: 1; transform: scale(1); }
-    25%       { opacity: 0; transform: scale(0.98); }
+    24%       { opacity: 0; transform: scale(0.97); }
     100%      { opacity: 0; }
   }
 
   .hero-slide {
     will-change: opacity, transform;
+    animation-fill-mode: both;
   }
 </style>
