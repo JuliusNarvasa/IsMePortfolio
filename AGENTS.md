@@ -42,7 +42,6 @@ src/
     ui/                       # reusable building blocks
       SectionHeader.astro     # eyebrow + title + description pattern
       ProjectCard.astro       # full project card (used in Projects section)
-      FrustrationCard.astro   # simpler "built because it annoyed me" card
       Tag.astro
       StatusDot.astro
       StatusRow.astro
@@ -81,7 +80,7 @@ Building       (05 — Now)
 Contact        (06 — Contact)
 ```
 
-Note: `Beyond the Code` and `Pet Projects` are both rendered from a single component import (`<Personality />` → `src/components/sections/Personality.astro`) but emit **two sibling `<section>` elements** with `id="beyond-the-code"` and `id="pet-projects"`. Both use `min-h-screen flex flex-col justify-center py-section px-6` so each gets its own full-viewport real estate. The pet-projects grid is `grid-cols-2` on `lg:` (2×2) and a snap-scroll horizontal carousel on mobile. The card image aspect ratio is `3 / 2`.
+Note: `Beyond the Code` and `Pet Projects` are both rendered from a single component import (`<Personality />` → `src/components/sections/Personality.astro`) but emit **two sibling `<section>` elements** with `id="beyond-the-code"` and `id="pet-projects"`. Both use `min-h-screen flex flex-col justify-center py-section px-6` so each gets its own full-viewport real estate. The pet-projects block is a stack of full-width feature rows (image on one side, text on the other) with `lg:order-1/2` alternation per row; on mobile the image stacks above the text. Image aspect ratio is `16 / 9`.
 
 ## Design system — read these two files first
 

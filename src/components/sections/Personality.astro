@@ -1,6 +1,5 @@
 ---
 import SectionHeader from '../ui/SectionHeader.astro';
-import FrustrationCard from '../ui/FrustrationCard.astro';
 
 const interests = [
   {
@@ -37,34 +36,46 @@ const interests = [
 
 const projects = [
   {
+    title: 'Homelab',
+    problem: 'Recreate a part of the internet locally.',
+    solution: 'A Proxmox box running Immich, Jellyfin, Vaultwarden, qBittorrent, and a few too many things.',
+    image: '/images/personality/homelab.jpg',
+    alt: 'A homelab monitor displaying a wall of red systemd service-failed messages.',
+    side: 'left' as const,
+  },
+  {
     title: 'Re-Fuel',
-    problem: 'I kept forgetting gas prices across different stations.',
+    problem: 'I wanted to know whether the gas I bought last week was actually a good deal, and to catch price changes the moment they happened.',
     solution: 'A mobile app that auto-logs every fill-up with GPS and reads the price board with the camera.',
     image: '/images/personality/refuel.jpg',
-    alt: 'Re-Fuel mobile app showing fuel log history',
+    alt: 'Re-Fuel app showing detected gas prices for a Phoenix Super LPG station — Premium 98, Premium 95, Super Regular, and Biodiesel.',
     href: 'https://refuel.bambaw-tumba.com',
+    side: 'right' as const,
   },
   {
     title: 'NetworkWatcher',
     problem: 'I had no idea if my ISP failover was actually working.',
     solution: 'A self-hosted Grafana dashboard that graphs latency and downtime per ISP in real time.',
     image: '/images/personality/networkwatcher.bmp',
-    alt: 'NetworkWatcher Grafana dashboard showing ISP latency and uptime',
+    alt: 'NetworkWatcher Grafana dashboard showing ISP latency and uptime per ISP.',
+    side: 'left' as const,
   },
   {
     title: 'Local Llama',
     problem: 'Cloud LLM APIs were getting expensive and laggy for daily use.',
     solution: 'A local llama.cpp + ROCm rig running a 30B model on my GPU, free of charge.',
     image: '/images/personality/locallama.jpg',
-    alt: 'Chat session with a locally-hosted LLM, no cloud involved',
+    alt: 'A locally-hosted LLM chat showing a real-time token counter and an in-flight API request.',
+    side: 'right' as const,
   },
   {
     title: 'GPU VRAM Monitor',
     problem: 'Windows could not tell me which process was eating my VRAM.',
     solution: 'A small WPF tool that shows per-process VRAM usage for AMD GPUs.',
-    image: '/images/personality/homelab-rack.jpg',
-    alt: 'The consumer AMD GPU that prompted the tool — an actual RX 7800 XT in a homelab rig',
+    image: '/images/projects/gpuvrammonitor.png',
+    alt: 'GPU VRAM Monitor — a WPF tool showing per-process VRAM usage for an AMD Radeon RX 7800 XT.',
     href: 'https://github.com/JuliusNarvasa/GPUVramMonitor',
+    side: 'left' as const,
   },
 ];
 ---
@@ -205,51 +216,60 @@ const projects = [
   aria-labelledby="section-pet-projects-title"
 >
   <div class="mx-auto w-full max-w-content">
-    <div class="mb-8" data-reveal>
+    <div class="mb-12" data-reveal>
       <p class="font-mono-sm text-accent mb-2">// pet_projects.built_from_frustration</p>
       <h3 id="section-pet-projects-title" class="text-h3 text-text mb-2">Built Because It Annoyed Me</h3>
       <p class="text-body text-text-muted max-w-prose">Side projects born from small daily annoyances.</p>
     </div>
 
-    {/* 4 frustration cards: horizontal snap-scroll on mobile/tablet, 2-col grid on desktop */}
-    <div class="scroll-x -mx-6 flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-2 lg:mx-0 lg:grid lg:grid-cols-2 lg:gap-6 lg:overflow-visible lg:px-0 lg:pb-0">
+    {/* 5 feature rows, stacked. Each row alternates image/text sides on desktop. */}
+    <div class="space-y-16 lg:space-y-20">
       {projects.map((project, i) => (
         <div
-          class="w-[78vw] max-w-[300px] flex-shrink-0 snap-start lg:w-auto lg:max-w-none"
+          class="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-12 lg:items-center"
           data-reveal
           data-reveal-delay={String(i * 80)}
         >
-          <FrustrationCard {...project} />
+          {/* Image column */}
+          <div class={project.side === 'left' ? 'lg:order-1' : 'lg:order-2'}>
+            <div class="overflow-hidden rounded-lg border border-border bg-bg-elevated shadow-subtle transition-all duration-slow ease-out-snappy hover:-translate-y-1 hover:border-accent hover:shadow-accent-glow">
+              <img
+                src={project.image}
+                alt={project.alt}
+                class="h-full w-full object-cover object-top"
+                loading="lazy"
+                style="aspect-ratio: 16 / 9;"
+              />
+            </div>
+          </div>
+
+          {/* Text column */}
+          <div class={project.side === 'left' ? 'lg:order-2' : 'lg:order-1'}>
+            <p class="font-mono-sm text-accent mb-3">{`0${i + 1} —`}</p>
+            <h4 class="text-h3 text-text mb-4">{project.title}</h4>
+            <p class="text-body text-text-muted mb-3 leading-relaxed">
+              <span class="font-mono-sm text-accent mr-1.5">// problem:</span>
+              {project.problem}
+            </p>
+            <p class="text-body text-text leading-relaxed">
+              <span class="font-mono-sm text-accent mr-1.5">→ fix:</span>
+              {project.solution}
+            </p>
+            {project.href && (
+              <div class="mt-5">
+                <a
+                  href={project.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="font-mono-sm text-accent inline-flex items-center gap-1 transition-colors duration-fast hover:text-accent-hover"
+                >
+                  view project ↗
+                </a>
+              </div>
+            )}
+          </div>
         </div>
       ))}
     </div>
   </div>
 </section>
-
-<style>
-  /* Slim, low-contrast scrollbar for the horizontal carousel on touch devices */
-  .scroll-x {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.14) transparent;
-  }
-  .scroll-x::-webkit-scrollbar {
-    height: 6px;
-  }
-  .scroll-x::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  .scroll-x::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.14);
-    border-radius: 3px;
-  }
-
-  @media (min-width: 1024px) {
-    /* Hide the scroll affordance entirely on desktop (no overflow) */
-    .scroll-x::-webkit-scrollbar {
-      display: none;
-    }
-    .scroll-x {
-      scrollbar-width: none;
-    }
-  }
-</style>

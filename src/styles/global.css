@@ -137,6 +137,16 @@ body {
 [data-reveal][data-reveal-delay="320"] { transition-delay: 320ms; }
 [data-reveal][data-reveal-delay="400"] { transition-delay: 400ms; }
 
+/* Hero slideshow crossfade */
+.hero-slide {
+  opacity: 0;
+  transition: opacity 800ms ease-in-out;
+  will-change: opacity;
+}
+.hero-slide.is-active {
+  opacity: 1;
+}
+
 /* Tree node styles */
 .tree {
   padding-left: calc(var(--depth, 0) * 16px);

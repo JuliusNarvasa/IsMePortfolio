@@ -1,5 +1,8 @@
 // Hero image slideshow
-// Cycles through images 1-5 in order, 5s per image, 800ms crossfade
+// Cycles through all .hero-slide elements in order, 5s per image, 800ms crossfade.
+// The crossfade is driven entirely by CSS via the `.is-active` class
+// (see .hero-slide / .hero-slide.is-active in src/styles/global.css).
+// JS only toggles the class — no inline-style mutations, no forced reflow.
 
 const slides = document.querySelectorAll<HTMLImageElement>('.hero-slide');
 if (slides.length > 0) {
@@ -7,30 +10,11 @@ if (slides.length > 0) {
   const total = slides.length;
 
   // Show first slide immediately
-  slides[0].style.opacity = '1';
-
-  function showSlide(index: number) {
-    const next = (index + 1) % total;
-    const incoming = slides[next];
-    const outgoing = slides[index];
-
-    // Reset incoming to 0 instantly
-    incoming.style.transition = 'none';
-    incoming.style.opacity = '0';
-
-    // Force reflow
-    void incoming.offsetWidth;
-
-    // Crossfade
-    outgoing.style.transition = 'opacity 800ms ease-in-out';
-    outgoing.style.opacity = '0';
-
-    incoming.style.transition = 'opacity 800ms ease-in-out';
-    incoming.style.opacity = '1';
-  }
+  slides[0].classList.add('is-active');
 
   setInterval(() => {
+    slides[current].classList.remove('is-active');
     current = (current + 1) % total;
-    showSlide(current);
+    slides[current].classList.add('is-active');
   }, 5000);
 }
