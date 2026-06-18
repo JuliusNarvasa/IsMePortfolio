@@ -4,6 +4,28 @@ import ProjectCard from '../ui/ProjectCard.astro';
 
 const projects = [
   {
+    slug: 'portfolio',
+    title: 'Portfolio',
+    category: 'web',
+    problem: 'Needed a personal site that feels like a developer dashboard, not a corporate landing page.',
+    challenges: [
+      'Astro static site with React components',
+      'Glassmorphism design system with scroll-reveal',
+      'Hero image slideshow with CSS-only crossfade',
+    ],
+    tech: ['astro', 'react', 'typescript', 'tailwindcss'],
+    links: {
+      github: 'https://github.com/JuliusNarvasa/IsMePortfolio',
+      demo: 'https://me.bambaw-tumba.com',
+      demoLabel: 'demo (omg recursion)',
+    },
+    screenshot: {
+      src: '/og.png',
+      alt: 'Julius Narvasa portfolio site showing developer dashboard aesthetic',
+      type: 'web' as const,
+    },
+  },
+  {
     slug: 'refuel',
     title: 'Re-Fuel',
     category: 'mobile',
@@ -40,26 +62,6 @@ const projects = [
     screenshot: {
       src: '/images/projects/airesumebuilder-home.png',
       alt: 'AI Resume Builder upload step showing file drag-and-drop interface',
-      type: 'web' as const,
-    },
-  },
-  {
-    slug: 'portfolio',
-    title: 'Portfolio',
-    category: 'web',
-    problem: 'Needed a personal site that feels like a developer dashboard, not a corporate landing page.',
-    challenges: [
-      'Astro static site with React components',
-      'Glassmorphism design system with scroll-reveal',
-      'Hero image slideshow with CSS-only crossfade',
-    ],
-    tech: ['astro', 'react', 'typescript', 'tailwindcss'],
-    links: {
-      github: 'https://github.com/JuliusNarvasa/IsMePortfolio',
-    },
-    screenshot: {
-      src: '/og.png',
-      alt: 'Julius Narvasa portfolio site showing developer dashboard aesthetic',
       type: 'web' as const,
     },
   },

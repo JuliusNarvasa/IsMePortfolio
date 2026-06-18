@@ -9,6 +9,7 @@ interface Props {
   links: {
     github?: string;
     demo?: string;
+    demoLabel?: string;
   };
   screenshot: {
     src: string;
@@ -94,7 +95,7 @@ const { slug, title, category, problem, challenges, tech, links, screenshot } = 
           rel="noopener noreferrer"
           class="font-mono-sm text-accent transition-colors duration-fast hover:text-accent-hover"
         >
-          demo ↗
+          {links.demoLabel ?? 'demo'} ↗
         </a>
       )}
     </div>
