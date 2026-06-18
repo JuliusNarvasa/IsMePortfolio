@@ -1,0 +1,48 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Julius Narvasa — Software Developer',
+  description = 'Senior backend, infrastructure, and AI engineer. Building self-hosted systems, local LLMs, and developer tooling.',
+} = Astro.props;
+
+import '../styles/global.css';
+---
+
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://me.bambaw-tumba.com/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Julius Narvasa — Software Developer" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content="https://me.bambaw-tumba.com/og.png" />
+    <meta name="twitter:image:alt" content="Julius Narvasa — Software Developer" />
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://me.bambaw-tumba.com" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

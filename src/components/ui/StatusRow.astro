@@ -1,0 +1,33 @@
+---
+interface Props {
+  name: string;
+  description: string;
+  status: 'online' | 'standby' | 'offline';
+  pulse?: boolean;
+  meta?: string;
+}
+
+const { name, description, status, pulse = false, meta } = Astro.props;
+
+const statusColor = status === 'online'
+  ? 'bg-success'
+  : status === 'standby'
+    ? 'bg-warning'
+    : 'bg-text-dim';
+---
+
+<div class="status-row group grid grid-cols-[16px_auto_1fr_auto] items-center gap-3 rounded-md border border-transparent p-2.5 transition-all duration-fast ease-out-snappy hover:border-border hover:bg-bg-glass-strong md:grid-cols-[16px_auto_1fr_auto]">
+  <span class:list={['relative inline-block h-2 w-2 rounded-full', statusColor]}>
+    {pulse && (
+      <span class:list={[
+        'absolute inset-[-4px] rounded-full border animate-pulse-ring',
+        status === 'online' ? 'border-success' : 'border-warning',
+      ]}></span>
+    )}
+  </span>
+  <span class="font-mono text-text">{name}</span>
+  <span class="text-body-sm text-text-muted hidden sm:inline">{description}</span>
+  {meta && (
+    <span class="font-mono-sm text-text-dim">{meta}</span>
+  )}
+</div>

@@ -1,0 +1,109 @@
+---
+import SectionHeader from '../ui/SectionHeader.astro';
+
+const entries = [
+  {
+    year: '2019',
+    role: 'Joined Netzon Tech',
+    description: 'Backend dev, internal tooling.',
+    achievements: [],
+  },
+  {
+    year: '2020',
+    role: 'Helped API development',
+    description: 'Gonna — social media platform for businesses.',
+    achievements: [],
+  },
+  {
+    year: '2021',
+    role: 'Helped API development',
+    description: 'Angebot — drag-and-drop document builder for sharing and signing documents between businesses.',
+    achievements: [],
+  },
+  {
+    year: '2022',
+    role: 'Led API development',
+    description: 'ChargeHeroes — Airbnb-like rental platform for vacant EV chargers. Acquired by a competitor a year later.',
+    achievements: [],
+  },
+  {
+    year: '2023',
+    role: 'Led API development',
+    description: 'Ment v2 — platform for parents with children who have ADHD and mental disabilities. Cloud integrations work alongside, including personal cloud projects now defunct due to running costs.',
+    achievements: [],
+  },
+  {
+    year: '2024',
+    role: 'Led API development',
+    description: 'GraphR — multi-tenant ISP management platform.',
+    achievements: [],
+  },
+  {
+    year: '2025',
+    role: 'Local AI infrastructure',
+    description: 'Self-hosted inference + image gen.',
+    achievements: [
+      'llama.cpp + ROCm on RX 7800 XT',
+      'ComfyUI for image generation',
+    ],
+  },
+  {
+    year: '2026',
+    role: 'AI & computer vision',
+    description: 'Started Re-Fuel price-board detection.',
+    achievements: [
+      'YOLOv8 on-device via ONNX',
+      'OCR preprocessing pipelines',
+    ],
+  },
+];
+---
+
+<section id="experience" class="py-section px-6" aria-labelledby="section-experience-title">
+  <div class="mx-auto max-w-content">
+    <div data-reveal>
+      <SectionHeader
+        eyebrow="04 — Experience"
+        title="Experience"
+        description="Where I've been and what I've shipped."
+      />
+    </div>
+
+    <div class="relative">
+      {/* Timeline rail */}
+      <div class="absolute left-[140px] top-0 bottom-0 hidden w-px bg-border lg:block"></div>
+
+      <div class="space-y-8">
+        {entries.map((entry, i) => (
+          <div class="relative flex flex-col gap-2 lg:flex-row lg:items-start lg:gap-8" data-reveal data-reveal-delay={String(i * 80)}>
+            {/* Year */}
+            <div class="w-full flex-shrink-0 lg:w-[110px] lg:pr-2 lg:text-right">
+              <span class="font-mono-lg text-text-muted">{entry.year}</span>
+            </div>
+
+            {/* Dot on rail (desktop only) */}
+            <div class="absolute left-[140px] top-2 hidden -translate-x-1/2 lg:block">
+              <div class="h-2.5 w-2.5 rounded-full border border-border-strong bg-bg-elevated transition-all duration-fast hover:scale-110 hover:border-accent"></div>
+            </div>
+
+            {/* Content */}
+            <div class="flex-1 pl-0 lg:pl-10">
+              <h3 class="text-h3 text-text mb-1">{entry.role}</h3>
+              <p class="text-body-sm text-text-muted mb-2">{entry.description}</p>
+              {entry.achievements.length > 0 && (
+                <ul class="space-y-1">
+                  {entry.achievements.map((a) => (
+                    <li class="text-body text-text-muted flex items-start gap-2 leading-relaxed">
+                      <span class="text-accent mt-0.5">›</span>
+                      {a}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

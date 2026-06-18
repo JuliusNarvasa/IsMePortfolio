@@ -1,0 +1,79 @@
+---
+const navLinks = [
+  { label: 'Projects', href: '#projects' },
+  { label: 'Infrastructure', href: '#infrastructure' },
+  { label: 'AI Lab', href: '#ai-lab' },
+  { label: 'Experience', href: '#experience' },
+  { label: 'Building', href: '#building' },
+  { label: 'Contact', href: '#contact' },
+];
+---
+
+<nav class="sticky top-0 z-50 h-14 border-b border-border bg-bg-glass-strong backdrop-blur-nav" aria-label="Primary">
+  <div class="mx-auto flex h-full max-w-wide items-center justify-between px-6">
+    {/* Logo — scrolls to absolute top of page */}
+    <a
+      href="#top"
+      class="font-mono text-text transition-colors duration-fast hover:text-accent"
+      data-scroll-top
+    >~/julius</a>
+
+    {/* Links — desktop only */}
+    <ul class="hidden items-center gap-6 lg:flex">
+      {navLinks.map((link) => (
+        <li>
+          <a
+            href={link.href}
+            class="nav-link font-mono-sm uppercase tracking-wider text-text-muted transition-colors duration-fast hover:text-text"
+            data-nav-anchor={link.href}
+          >
+            {link.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    {/* Theme indicator */}
+    <div class="flex items-center gap-2">
+      <span class="inline-block h-2 w-2 rounded-full bg-success"></span>
+      <span class="font-mono-sm text-text-dim">Dark</span>
+    </div>
+  </div>
+</nav>
+
+<script>
+  // Logo: force scroll to absolute top (y=0) instead of to #top element
+  // (which sits below the sticky nav)
+  const logo = document.querySelector('[data-scroll-top]');
+  logo?.addEventListener('click', (e) => {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // Active section highlight via IntersectionObserver
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('[data-nav-anchor]');
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const id = entry.target.getAttribute('id');
+          navLinks.forEach((link) => {
+            const href = link.getAttribute('data-nav-anchor');
+            if (href === `#${id}`) {
+              link.classList.add('text-accent');
+              link.classList.remove('text-text-muted');
+            } else {
+              link.classList.remove('text-accent');
+              link.classList.add('text-text-muted');
+            }
+          });
+        }
+      });
+    },
+    { threshold: 0.15, rootMargin: '0px 0px -10% 0px' }
+  );
+
+  sections.forEach((section) => observer.observe(section));
+</script>

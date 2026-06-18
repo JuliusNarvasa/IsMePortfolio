@@ -1,0 +1,37 @@
+---
+import SectionHeader from '../ui/SectionHeader.astro';
+import HandleRow from '../ui/HandleRow.astro';
+
+const handles = [
+  { label: 'email', value: 'jibnarvasa@gmail.com', href: 'mailto:jibnarvasa@gmail.com' },
+  { label: 'linkedin', value: 'linkedin.com/in/bambaw-tumba', href: 'https://www.linkedin.com/in/bambaw-tumba/' },
+  { label: 'github', value: 'github.com/JuliusNarvasa', href: 'https://github.com/JuliusNarvasa' },
+];
+---
+
+<section id="contact" class="py-section px-6" aria-labelledby="section-contact-title">
+  <div class="mx-auto max-w-narrow">
+    <div data-reveal>
+      <SectionHeader
+        eyebrow="06 — Contact"
+        title="Get in touch"
+        description="Open to interesting backend, infra, and AI work."
+      />
+    </div>
+
+    <dl data-reveal data-reveal-delay="80">
+      {handles.map((handle) => (
+        <HandleRow {...handle} />
+      ))}
+    </dl>
+
+    <div class="mt-8 text-right" data-reveal data-reveal-delay="160">
+      <a
+        href="mailto:jibnarvasa@gmail.com"
+        class="font-mono-lg text-accent transition-colors duration-fast hover:text-accent-hover hover:underline"
+      >
+        say hi →
+      </a>
+    </div>
+  </div>
+</section>

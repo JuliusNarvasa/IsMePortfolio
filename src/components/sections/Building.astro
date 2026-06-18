@@ -1,0 +1,38 @@
+---
+import SectionHeader from '../ui/SectionHeader.astro';
+
+const items = [
+  { title: 'Local AI assistant ecosystem', sub: 'multi-backend proxy + embedding server', meta: 'wip' },
+  { title: 'Fuel-price recognition platform', sub: 'end-to-end, beyond the Re-Fuel MVP', meta: 'research' },
+  { title: 'Self-hosted AI infrastructure', sub: 'HIP-native builds, draft-model speculation', meta: 'shipping' },
+];
+---
+
+<section id="building" class="py-section-tight px-6" aria-labelledby="section-building-title">
+  <div class="mx-auto max-w-narrow">
+    <div data-reveal>
+      <SectionHeader
+        eyebrow="05 — Now"
+        title="Currently Building"
+        description="Active threads. Updated as things ship."
+      />
+    </div>
+
+    <ul class="space-y-0">
+      {items.map((item, i) => (
+        <li
+          class="flex items-baseline gap-6 border-b border-border py-3 transition-colors duration-fast hover:bg-bg-glass hover:rounded-md md:items-center"
+          data-reveal
+          data-reveal-delay={String(i * 100)}
+        >
+          <span class="flex-shrink-0 text-accent font-mono">→</span>
+          <div class="flex-1">
+            <span class="font-mono-lg text-text">{item.title}</span>
+            <p class="font-mono-sm text-text-muted mt-1">{item.sub}</p>
+          </div>
+          <span class="font-mono-sm text-text-dim flex-shrink-0">{item.meta}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>

@@ -1,0 +1,87 @@
+---
+import SectionHeader from '../ui/SectionHeader.astro';
+import ProjectCard from '../ui/ProjectCard.astro';
+
+const projects = [
+  {
+    slug: 'refuel',
+    title: 'Re-Fuel',
+    category: 'mobile',
+    problem: 'Drivers manually log gas prices and fuel consumption across the Philippines — no easy way to see trends or remember which station was cheapest last week.',
+    challenges: [
+      'GPS-based auto-capture within 150m',
+      'On-device YOLOv8 price-board detection (ONNX)',
+      'Offline-first IndexedDB cache',
+    ],
+    tech: ['react', 'capacitor', 'typescript', 'yolov8', 'onnx', 'csharp', 'dotnet-8', 'postgres'],
+    links: {
+      demo: 'https://refuel.bambaw-tumba.com',
+    },
+    screenshot: {
+      src: '/images/projects/refuel-home.png',
+      alt: 'Re-Fuel mobile app home screen showing gas station price tracking',
+      type: 'mobile' as const,
+    },
+  },
+  {
+    slug: 'airesumebuilder',
+    title: 'AI Resume Builder',
+    category: 'web',
+    problem: 'Tailoring a resume to every job posting is tedious and error-prone. Generic resumes get filtered out.',
+    challenges: [
+      'PDF + DOCX resume parsing',
+      'Playwright-based LinkedIn scraping',
+      'Structured LLM output for tailored CV + cover letter',
+    ],
+    tech: ['fastapi', 'python', 'react', 'vite', 'tailwindcss', 'playwright', 'openai-api', 'pymupdf'],
+    links: {
+      demo: 'https://cvmaker.bambaw-tumba.com',
+    },
+    screenshot: {
+      src: '/images/projects/airesumebuilder-home.png',
+      alt: 'AI Resume Builder upload step showing file drag-and-drop interface',
+      type: 'web' as const,
+    },
+  },
+  {
+    slug: 'gpuvrammonitor',
+    title: 'GpuVramMonitor',
+    category: 'desktop',
+    problem: 'Windows has no per-process VRAM tool for AMD GPUs. Task Manager shows only the total; AMD Adrenalin shows only the total.',
+    challenges: [
+      'Parsing GPU Process Memory performance counter instance names',
+      'Resolving PIDs and excluding the inflated dwm.exe reading',
+      'Real-time refresh with pause/resume',
+    ],
+    tech: ['csharp', 'wpf', 'dotnet-8', 'windows', 'performance-counters'],
+    links: {
+      github: 'https://github.com/JuliusNarvasa/GPUVramMonitor',
+    },
+    screenshot: {
+      src: '/images/projects/gpuvrammonitor.png',
+      alt: 'GpuVramMonitor showing per-process VRAM usage on AMD Radeon RX 7800 XT',
+      type: 'web' as const,
+    },
+  },
+];
+---
+
+<section id="projects" class="py-section px-6" aria-labelledby="section-projects-title">
+  <div class="mx-auto max-w-content">
+    <div data-reveal>
+      <SectionHeader
+        eyebrow="01 — Projects"
+        title="Featured Projects"
+        description="Things I've built end-to-end."
+      />
+    </div>
+
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {projects.map((project, i) => (
+        <div data-reveal data-reveal-delay={String(i * 80)}>
+          <ProjectCard {...project} />
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

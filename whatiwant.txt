@@ -1,0 +1,103 @@
+Create a modern personal developer portfolio website.
+
+Style:
+
+* Dark mode by default
+* Clean, minimal, and personal
+* Not corporate, not startup-marketing, not agency-style
+* Inspired by modern developer portfolios
+* Subtle glassmorphism and soft shadows
+* Plenty of whitespace
+* Smooth but minimal animations
+* Professional but approachable
+* Mobile-first responsive design
+
+Color palette:
+
+* Dark charcoal background
+* Soft off-white text
+* Single accent color (teal, cyan, or orange)
+* Avoid bright gradients and excessive effects
+
+Layout:
+
+Hero Section:
+
+* Large name
+* Software Developer
+* Short personal introduction
+* Brief summary of interests:
+
+  * Backend development
+  * APIs
+  * Cloud infrastructure
+  * AI and local LLMs
+  * Self-hosted systems
+* Call-to-action buttons:
+
+  * View Projects
+  * Contact Me
+
+About Me:
+
+* Personal story
+* Years of experience
+* Technologies I work with
+* What I enjoy building
+
+Experience Timeline:
+
+* Clean vertical timeline
+* Role title
+* Company
+* Dates
+* Key achievements
+
+Projects Section:
+
+* Large project cards
+* Screenshot area
+* Technology tags
+* Problem solved
+* Key technical challenges
+* GitHub and live demo links
+
+Skills Section:
+
+* Categorized skill groups:
+
+  * Backend
+  * Frontend
+  * Cloud
+  * Databases
+  * DevOps
+  * AI/ML
+* Display as clean badges rather than progress bars
+
+Technical Interests:
+
+* Self-hosting
+* Home lab
+* Local AI
+* Performance optimization
+* Automation
+
+Contact Section:
+
+* Email
+* LinkedIn
+* GitHub
+
+Design Requirements:
+
+* Fast loading
+* Accessible
+* SEO friendly
+* No unnecessary animations
+* No stock photos
+* No skill percentage bars
+* No corporate buzzwords
+* Focus on craftsmanship and real projects
+
+Overall vibe:
+A senior developer's personal corner of the internet that feels authentic, technical, and thoughtfully designed rather than a polished marketing website.

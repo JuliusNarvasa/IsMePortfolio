@@ -1,0 +1,27 @@
+---
+interface Props {
+  label: string;
+  value: string;
+  href?: string;
+}
+
+const { label, value, href } = Astro.props;
+---
+
+<div class="flex items-baseline gap-6 border-b border-border py-3">
+  <dt class="w-24 flex-shrink-0 font-mono text-text-dim uppercase tracking-widest">{label}</dt>
+  <dd class="font-mono-lg text-text">
+    {href ? (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="transition-colors duration-fast hover:text-accent-hover hover:underline"
+      >
+        {value}
+      </a>
+    ) : (
+      value
+    )}
+  </dd>
+</div>

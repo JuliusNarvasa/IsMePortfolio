@@ -1,0 +1,38 @@
+---
+interface Props {
+  status: 'online' | 'standby' | 'offline';
+  pulse?: boolean;
+  size?: 'sm' | 'md';
+}
+
+const { status, pulse = false, size = 'md' } = Astro.props;
+
+const sizeClass = size === 'sm' ? 'h-1.5 w-1.5' : 'h-2 w-2';
+
+const statusColor = status === 'online'
+  ? 'bg-success'
+  : status === 'standby'
+    ? 'bg-warning'
+    : 'bg-text-dim';
+
+const pulseRingColor = status === 'online'
+  ? 'border-success'
+  : status === 'standby'
+    ? 'border-warning'
+    : 'border-text-dim';
+---
+
+<span class:list={['relative inline-block', sizeClass]}>
+  <span class:list={[
+    'absolute inline-flex h-full w-full rounded-full',
+    statusColor,
+    pulse && 'animate-pulse-dot',
+  ]}></span>
+  {pulse && (
+    <span class:list={[
+      'absolute inset-[-4px] rounded-full border',
+      pulseRingColor,
+      'animate-pulse-ring',
+    ]}></span>
+  )}
+</span>

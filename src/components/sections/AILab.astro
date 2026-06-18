@@ -1,0 +1,53 @@
+---
+import SectionHeader from '../ui/SectionHeader.astro';
+import StatusRow from '../ui/StatusRow.astro';
+import StatusDot from '../ui/StatusDot.astro';
+
+const inferenceItems = [
+  { name: 'llama.cpp', description: 'Local LLM server, Vulkan + ROCm backends', status: 'online' as const, pulse: true, meta: 'b9106' },
+  { name: 'Qwen3.6-35B-A3B', description: 'MoE model, 3B active params', status: 'online' as const, meta: 'Q4_K_M' },
+  { name: 'AMD ROCm / HIP', description: 'Native HIP backend on RX 7800 XT', status: 'online' as const, meta: 'gfx1101' },
+];
+
+const visionItems = [
+  { name: 'ComfyUI', description: 'Image gen workflow server', status: 'online' as const, pulse: true, meta: 'ROCm' },
+  { name: 'Chroma1-HD', description: 'FLUX-based diffusion, pruned', status: 'online' as const, meta: 'Q6_K' },
+];
+---
+
+<section id="ai-lab" class="py-section px-6" aria-labelledby="section-ailab-title">
+  <div class="mx-auto max-w-content">
+    <div data-reveal>
+      <SectionHeader
+        eyebrow="03 — AI Lab"
+        title="AI Lab"
+        description="Local inference and computer vision experiments."
+      />
+    </div>
+
+    {/* Status banner */}
+    <div class="mb-6 flex items-center gap-3 rounded-lg border border-border bg-bg-glass p-3.5 backdrop-blur-glass" data-reveal data-reveal-delay="80">
+      <StatusDot status="online" pulse={true} />
+      <span class="font-mono text-text">Online — local inference ready</span>
+    </div>
+
+    {/* Lab panel */}
+    <div class="rounded-lg border border-border bg-bg-glass p-6 backdrop-blur-glass" data-reveal data-reveal-delay="160">
+      {/* Inference subsection */}
+      <h3 class="text-h5 uppercase tracking-widest text-text-muted mb-3 mt-0">Inference</h3>
+      <div class="space-y-0.5">
+        {inferenceItems.map((item) => (
+          <StatusRow {...item} />
+        ))}
+      </div>
+
+      {/* Vision subsection */}
+      <h3 class="text-h5 uppercase tracking-widest text-text-muted mb-3 mt-6">Vision</h3>
+      <div class="space-y-0.5">
+        {visionItems.map((item) => (
+          <StatusRow {...item} />
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

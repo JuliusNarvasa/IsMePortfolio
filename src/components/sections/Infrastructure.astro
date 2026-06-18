@@ -1,0 +1,130 @@
+---
+import SectionHeader from '../ui/SectionHeader.astro';
+import TreeNode from '../ui/TreeNode.astro';
+
+const homelabTree = {
+  label: 'Proxmox · on-prem',
+  status: 'online' as const,
+  children: [
+    {
+      label: 'VM 100 · apps',
+      status: 'online' as const,
+      children: [
+        { label: 'Immich (Docker)', status: 'online' as const },
+        { label: 'Jellyfin (native)', status: 'online' as const },
+        { label: 'qBittorrent (native)', status: 'online' as const },
+      ],
+    },
+    {
+      label: 'VM 101 · networkwatcher',
+      status: 'online' as const,
+      description: 'Grafana UI visualizer for the current ISPs.',
+    },
+    { label: 'VM 102 · OmadaController', status: 'online' as const },
+    {
+      label: 'VM 103 · autoswitcher',
+      status: 'online' as const,
+      description: 'Cronjob that connects to OmadaController to automatically switch based on response time of the ISP.',
+    },
+  ],
+};
+
+const vpsTree = {
+  label: 'VPS · cloud (ARM64)',
+  status: 'online' as const,
+  children: [
+    { label: 'Nginx reverse proxy (public-facing)', status: 'online' as const },
+    { label: 'SillyTavern (node)', status: 'online' as const },
+    { label: 'AI Resume Builder (FastAPI)', status: 'online' as const },
+    { label: 'Re-Fuel API (.NET)', status: 'online' as const },
+    { label: 'Ollama — embeddings', status: 'online' as const },
+    { label: 'vaultwarden', status: 'online' as const },
+    { label: 'n8n', status: 'online' as const },
+    { label: 'PostgreSQL', status: 'online' as const },
+    { label: 'Redis', status: 'online' as const },
+    { label: 'WireGuard', status: 'online' as const },
+  ],
+};
+
+const localTree = {
+  label: 'Local workstation',
+  children: [
+    { label: 'llama.cpp + Qwen3-Coder (LLM inference)', status: 'online' as const },
+    { label: 'ComfyUI (image gen)', status: 'online' as const },
+    { label: 'OpenCode (AI assistant)', status: 'online' as const },
+  ],
+};
+
+const networkTree = {
+  label: 'Networking',
+  children: [
+    { label: 'Tailscale (mesh)', status: 'online' as const },
+    { label: 'WireGuard', status: 'online' as const },
+    { label: 'Cloudflare DNS', status: 'online' as const },
+    { label: 'Nginx reverse proxy', status: 'online' as const },
+  ],
+};
+
+const cloudTree = {
+  label: 'Cloud',
+  children: [
+    { label: 'Oracle Cloud (ARM64)', status: 'online' as const },
+  ],
+};
+---
+
+<section id="infrastructure" class="py-section px-6" aria-labelledby="section-infra-title">
+  <div class="mx-auto max-w-content">
+    <div data-reveal>
+      <SectionHeader
+        eyebrow="02 — Infrastructure"
+        title="Infrastructure"
+        description="Self-hosted across a Proxmox box at home and a cloud VPS."
+      />
+    </div>
+
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      {/* Homelab */}
+      <div class="rounded-lg border border-border bg-bg-glass p-6 backdrop-blur-glass" data-reveal data-reveal-delay="0">
+        <h3 class="text-h5 uppercase tracking-widest text-text-muted mb-4">Homelab</h3>
+        <div role="tree" aria-label="Homelab infrastructure">
+          <TreeNode node={homelabTree} />
+        </div>
+      </div>
+
+      {/* VPS */}
+      <div class="rounded-lg border border-border bg-bg-glass p-6 backdrop-blur-glass" data-reveal data-reveal-delay="100">
+        <h3 class="text-h5 uppercase tracking-widest text-text-muted mb-4">VPS (cloud)</h3>
+        <div role="tree" aria-label="VPS infrastructure">
+          <TreeNode node={vpsTree} />
+        </div>
+      </div>
+
+      {/* Local workstation */}
+      <div class="rounded-lg border border-border bg-bg-glass p-6 backdrop-blur-glass" data-reveal data-reveal-delay="200">
+        <h3 class="text-h5 uppercase tracking-widest text-text-muted mb-4">Local workstation</h3>
+        <div role="tree" aria-label="Local workstation services">
+          <TreeNode node={localTree} />
+        </div>
+      </div>
+
+      {/* Networking */}
+      <div class="rounded-lg border border-border bg-bg-glass p-6 backdrop-blur-glass" data-reveal data-reveal-delay="300">
+        <h3 class="text-h5 uppercase tracking-widest text-text-muted mb-4">Networking</h3>
+        <div role="tree" aria-label="Networking">
+          <TreeNode node={networkTree} />
+        </div>
+      </div>
+    </div>
+
+    {/* Cloud row spans full width */}
+    <div class="mt-6 grid grid-cols-1 gap-6">
+      <div class="rounded-lg border border-border bg-bg-glass p-6 backdrop-blur-glass" data-reveal data-reveal-delay="400">
+        <h3 class="text-h5 uppercase tracking-widest text-text-muted mb-4">Cloud</h3>
+        <div role="tree" aria-label="Cloud">
+          <TreeNode node={cloudTree} />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,127 @@
+I agree. Based on your background, the "developer workstation" concept is probably a better fit than a traditional portfolio.
+
+Most developer portfolios look like:
+
+Hero → About → Skills → Experience → Contact
+
+They're fine, but forgettable.
+
+Yours could feel like opening someone's actual engineering workspace.
+
+Homepage
+┌───────────────────────────────────────────┐
+│ Julius Narvasa                            │
+│ Software Developer                        │
+│ Building APIs, AI Systems, and Infrastructure
+└───────────────────────────────────────────┘
+
+[ Projects ] [ Infrastructure ] [ AI Lab ] [ Experience ]
+Module 1: Featured Projects
+
+Large cards showing real things you've built.
+
+GraphR
+
+Multi-tenant ISP management platform
+Backend APIs
+Stripe + GoCardless integration
+Subscription recovery workflows
+
+Re:Fuel
+
+Fuel price tracking application
+Computer vision price-board detection
+React + Capacitor mobile app
+YOLOv8 + ONNX
+Module 2: Infrastructure
+
+Instead of "skills", show your stack visually.
+
+Infrastructure
+
+Proxmox
+├─ Ubuntu VMs
+├─ Docker Services
+├─ Immich
+├─ Jellyfin
+├─ Komga
+└─ AI Inference Servers
+
+Networking
+├─ WireGuard
+├─ Tailscale
+├─ Headscale
+├─ Nginx
+└─ Cloudflare
+
+Cloud
+├─ Azure
+├─ GCP
+└─ Azure Front Door
+
+Visitors instantly understand that you're not just a CRUD developer.
+
+Module 3: AI Lab
+
+This is where you become memorable.
+
+Current Experiments
+
+✓ Local LLM inference
+✓ llama.cpp optimization
+✓ GGUF quantization
+✓ AMD GPU acceleration
+✓ Computer vision
+✓ OCR pipelines
+✓ AI-assisted automation
+
+Could even look like a status dashboard.
+
+Module 4: Experience
+
+Timeline style.
+
+2020 ─ Joined Netzon Tech
+2021 ─ Led API development for major platform
+2022 ─ Cloud integrations and optimization
+2023 ─ Payments and billing architecture
+2024 ─ AI and computer vision projects
+2025 ─ Local AI infrastructure and automation
+2026 ─ Exploring GraphQL and advanced AI systems
+Module 5: Currently Building
+
+This is something most portfolios miss.
+
+Currently Building
+
+→ Local AI assistant ecosystem
+→ Fuel-price recognition platform
+→ Self-hosted AI infrastructure
+→ Payment automation workflows
+
+Shows you're active, not just listing old accomplishments.
+
+Design Inspiration
+
+Think:
+
+Clean dashboard
+Dark theme
+JetBrains aesthetic
+Linear-style polish
+Minimal terminal elements
+Monospace for technical data
+Inter for body text
+No giant gradients
+No stock photos
+No skill bars
+
+The feeling should be:
+
+"This is the personal workspace of an engineer who likes building things."
+
+Not:
+
+"Welcome to my digital marketing résumé."
+
+That's a much stronger brand for someone with your mix of backend engineering, infrastructure, self-hosting, payments, and AI experimentation.

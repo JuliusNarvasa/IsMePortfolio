@@ -1,0 +1,102 @@
+---
+interface Props {
+  slug: string;
+  title: string;
+  category: string;
+  problem: string;
+  challenges: string[];
+  tech: string[];
+  links: {
+    github?: string;
+    demo?: string;
+  };
+  screenshot: {
+    src: string;
+    alt: string;
+    type?: 'web' | 'mobile';
+  };
+}
+
+const { slug, title, category, problem, challenges, tech, links, screenshot } = Astro.props;
+---
+
+<article class="group rounded-lg border border-border bg-bg-elevated shadow-subtle transition-all duration-slow ease-out-snappy hover:-translate-y-1 hover:border-border-strong hover:shadow-elevated focus-within:border-accent focus-within:shadow-accent-glow">
+  {/* Screenshot area */}
+  <div class="relative overflow-hidden rounded-t-lg" style="aspect-ratio: 16 / 9;">
+    {screenshot.src ? (
+      <img
+        src={screenshot.src}
+        alt={screenshot.alt}
+        class="h-full w-full object-cover object-top transition-transform duration-slower ease-out-smooth group-hover:scale-[1.03]"
+        loading="lazy"
+      />
+    ) : (
+      <div class="flex h-full w-full items-center justify-center bg-bg">
+        <span class="font-mono text-text-dim text-body-sm">{title}</span>
+      </div>
+    )}
+  </div>
+
+  {/* Content */}
+  <div class="p-6">
+    {/* Title row */}
+    <div class="mb-2 flex items-center gap-3">
+      <h3 class="text-h3 text-text">{title}</h3>
+      <span class="inline-flex items-center gap-1.5 rounded-sm border border-border bg-bg-glass px-2 py-0.5 font-mono-sm uppercase text-text-muted">
+        <span class="inline-block h-1.5 w-1.5 rounded-full bg-accent"></span>
+        {category}
+      </span>
+    </div>
+
+    {/* Problem */}
+    <p class="mb-4 text-body-sm text-text-muted">{problem}</p>
+
+    {/* Challenges */}
+    {challenges.length > 0 && (
+      <div class="mb-4">
+        <p class="font-mono-sm text-text-dim mb-1.5 uppercase">Challenges</p>
+        <ul class="list-none space-y-1">
+          {challenges.map((c) => (
+            <li class="text-body-sm text-text-muted flex items-start gap-2">
+              <span class="text-accent mt-0.5">›</span>
+              {c}
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+
+    {/* Tech tags */}
+    <div class="mb-4 flex flex-wrap gap-1.5">
+      {tech.map((t) => (
+        <span class="inline-flex items-center rounded-sm border border-border bg-bg-glass px-2 py-0.5 font-mono-sm uppercase text-text-muted">
+          {t}
+        </span>
+      ))}
+    </div>
+
+    {/* Links */}
+    <div class="flex items-center gap-4 pt-2">
+      {links.github && (
+        <a
+          href={links.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="font-mono-sm text-accent transition-colors duration-fast hover:text-accent-hover"
+        >
+          github ↗
+        </a>
+      )}
+      {links.demo && (
+        <a
+          href={links.demo}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="font-mono-sm text-accent transition-colors duration-fast hover:text-accent-hover"
+        >
+          demo ↗
+        </a>
+      )}
+    </div>
+  </div>
+</article>
