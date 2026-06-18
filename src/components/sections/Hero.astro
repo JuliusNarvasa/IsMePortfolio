@@ -70,52 +70,6 @@
   </div>
 </header>
 
-<script>
-  function initSlideshow() {
-    const slides = document.querySelectorAll<HTMLImageElement>('.hero-slide');
-    if (slides.length === 0) return;
-
-    let current = 0;
-    const total = slides.length;
-    const showDuration = 5000;
-    const fadeDuration = 800;
-
-    function showSlide(index: number) {
-      const next = (index + 1) % total;
-
-      // Hide all instantly
-      slides.forEach((s, i) => {
-        if (i !== index && i !== (index - 1 + total) % total) {
-          s.style.transition = 'none';
-          s.style.opacity = '0';
-        }
-      });
-
-      // Prepare incoming slide at 0 (no transition yet)
-      const incoming = slides[next];
-      incoming.style.transition = 'none';
-      incoming.style.opacity = '0';
-
-      // Force reflow so the browser registers the 0 before animating to 1
-      void incoming.offsetWidth;
-
-      // Fade in incoming, fade out current
-      slides[index].style.transition = `opacity ${fadeDuration}ms ease-in-out`;
-      slides[index].style.opacity = '0';
-
-      incoming.style.transition = `opacity ${fadeDuration}ms ease-in-out`;
-      incoming.style.opacity = '1';
-    }
-
-    setInterval(() => {
-      current = (current + 1) % total;
-      showSlide(current);
-    }, showDuration);
-  }
-
-  document.addEventListener('DOMContentLoaded', initSlideshow);
-</script>
-
 <style>
   .hero-slideshow {
     mask-image: radial-gradient(ellipse 90% 85% at 50% 50%, black 30%, transparent 100%);
