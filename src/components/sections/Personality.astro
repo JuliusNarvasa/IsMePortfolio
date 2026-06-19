@@ -37,7 +37,7 @@ const interests = [
 const projects = [
   {
     title: 'Homelab',
-    problem: 'Recreate a part of the internet locally.',
+    problem: 'Every service in the internet requires a subscription now. Photos storage, watching anime, password managers... Why not do it for free?',
     solution: 'A Proxmox box running Immich, Jellyfin, Vaultwarden, qBittorrent, and a few too many things.',
     images: [
       { src: '/images/personality/homelab-1.png', alt: 'The Immich photo library UI, self-hosted and showing ~4 TB of personal photos indexed and searchable.' },
@@ -357,11 +357,11 @@ const petProjectsImageSources = projects.map((p) => p.images.map((i) => i.src));
         const details = btn.querySelector('[data-pet-details]');
         if (i === activeProject) {
           btn.setAttribute('aria-current', 'true');
-          // Force-expanded: pin the inline height so the text is visible
-          // even if a previous collapse/expand animation was interrupted.
-          // The Web Animations API path can leave stale state after rapid
-          // clicks or backgrounded-tab timer pile-ups — this guarantees
-          // the active tile's details are always rendered.
+          // Force-expanded: pin the active tile's details to auto so the
+          // text is always visible, regardless of any stale animation
+          // state from the Web Animations API. The CSS rule for
+          // aria-current="true" also applies (height: auto) — this is
+          // belt-and-braces.
           if (details) {
             details.getAnimations().forEach((a) => a.cancel());
             details.style.height = 'auto';
@@ -370,24 +370,34 @@ const petProjectsImageSources = projects.map((p) => p.images.map((i) => i.src));
         } else {
           btn.removeAttribute('aria-current');
           if (details) {
+            // Cancel any in-flight animation. We deliberately do NOT
+            // set an inline height here — the CSS !important rule for
+            // non-active tiles (height: 0) handles the hiding. Setting
+            // an inline height would force collapseTile to short-circuit
+            // and kill the smooth collapse animation.
             details.getAnimations().forEach((a) => a.cancel());
-            details.style.height = '0px';
-            details.style.marginTop = '0';
           }
+          // Clean up .is-collapsing from any tile whose collapse
+          // animation was interrupted (e.g., a rapid click on a
+          // third tile). Without this, the !important override would
+          // keep the tile at auto and its text would stay visible.
+          btn.classList.remove('is-collapsing');
         }
       });
     }
 
     // Collapse a tile's details with a smooth animation that mirrors expandTile.
-    // Cancels any in-flight animation on the same element first so the two
-    // can't fight each other. If the tile is already collapsed (offsetHeight
-    // 0), the call short-circuits — no point animating from 0 to 0.
+    // The caller (switchProject) is expected to have added the .is-collapsing
+    // class to the tile — that class has !important CSS that overrides the
+    // inactive-tile !important rule, keeping the element at its natural height
+    // so this animation can run. We remove the class in onfinish (and in the
+    // short-circuit path) so the !important inactive rule reasserts and the
+    // tile stays at 0.
     //
-    // The starting state is set inline (matching the first keyframe) and a
-    // reflow is forced before .animate() runs. Without this, the animation
-    // can race the aria-current removal in showListItem() (both happen in
-    // the same tick) and snap straight to the final frame — which manifested
-    // as a tile that simply never collapsed on auto-cycle.
+    // If the tile is already collapsed (offsetHeight 0), the call short-
+    // circuits — no point animating from 0 to 0. This happens in the rapid-
+    // click case where a third tile's switchProject canceled our animation
+    // and the CSS !important already forced the height to 0.
     function collapseTile(tile) {
       const details = tile.querySelector('[data-pet-details]');
       if (!details) return;
@@ -397,6 +407,7 @@ const petProjectsImageSources = projects.map((p) => p.images.map((i) => i.src));
       if (startHeight === 0) {
         details.style.height = '0px';
         details.style.marginTop = '0';
+        tile.classList.remove('is-collapsing');
         return;
       }
 
@@ -407,8 +418,8 @@ const petProjectsImageSources = projects.map((p) => p.images.map((i) => i.src));
       void details.offsetHeight;
 
       // Animate from the current rendered height down to 0. `fill: 'forwards'`
-      // holds the final collapsed state. onfinish pins the inline style so the
-      // static aria-current="false" CSS rule stays consistent with it.
+      // holds the final collapsed state. onfinish pins the inline style and
+      // removes .is-collapsing so the !important inactive CSS rule takes over.
       const animation = details.animate(
         [
           { height: startHeight + 'px', marginTop: '0.75rem' },
@@ -423,6 +434,7 @@ const petProjectsImageSources = projects.map((p) => p.images.map((i) => i.src));
       animation.onfinish = () => {
         details.style.height = '0px';
         details.style.marginTop = '0';
+        tile.classList.remove('is-collapsing');
       };
     }
 
@@ -475,8 +487,15 @@ const petProjectsImageSources = projects.map((p) => p.images.map((i) => i.src));
       activeImage = 0;
       showListItem();
       showImage();
-      // Collapse the outgoing tile instantly, then animate the incoming one.
-      collapseTile(listItems[oldIndex]);
+      // Mark the outgoing tile as collapsing so the CSS !important rule
+      // for inactive tiles (height: 0) doesn't force it to 0 before
+      // collapseTile can animate. The .is-collapsing class has higher
+      // specificity and overrides with `height: auto !important`, holding
+      // the element at its natural height for the animation. collapseTile
+      // removes the class in onfinish.
+      const oldTile = listItems[oldIndex];
+      oldTile.classList.add('is-collapsing');
+      collapseTile(oldTile);
       expandTile(listItems[newIndex]);
     }
 

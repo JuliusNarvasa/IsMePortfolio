@@ -239,6 +239,14 @@ body {
   height: auto;
   margin-top: 0.75rem;
 }
+/* While a tile is mid-collapse, keep it at its natural height so the
+   Web Animations API can animate from that height down to 0. Higher
+   specificity beats the :not() rule above; the class is removed in
+   collapseTile's onfinish so the !important rule takes over. */
+[data-pet-list-item].is-collapsing [data-pet-details] {
+  height: auto !important;
+  margin-top: 0.75rem !important;
+}
 
 /* Tree node styles */
 .tree {

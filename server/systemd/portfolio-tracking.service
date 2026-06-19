@@ -1,0 +1,39 @@
+# Portfolio Tracking Service — systemd unit
+#
+# Copy this file into /etc/systemd/system/ on the VPS, then run:
+#   sudo systemctl daemon-reload && sudo systemctl enable --now portfolio-tracking
+#
+# Logs are appended to /var/log/portfolio-tracking.log and also go to journald
+# (`journalctl -u portfolio-tracking -f`).
+# Tweak WorkingDirectory / Environment as needed for your setup.
+
+[Unit]
+Description=Portfolio tracking service
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/portfolio/server
+Environment=PORT=4322
+Environment=NODE_ENV=production
+ExecStartPre=/usr/bin/mkdir -p /home/ubuntu/portfolio/server/data
+ExecStart=/usr/bin/node index.js
+Restart=on-failure
+RestartSec=5
+
+# Hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+PrivateTmp=true
+ReadWritePaths=/home/ubuntu/portfolio/server/data
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+LimitNOFILE=8192
+MemoryMax=256M
+
+StandardOutput=append:/var/log/portfolio-tracking.log
+StandardError=append:/var/log/portfolio-tracking.log
+
+[Install]
+WantedBy=multi-user.target

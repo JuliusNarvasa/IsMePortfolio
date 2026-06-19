@@ -52,6 +52,8 @@ src/
   scripts/
     reveal.ts                 # IntersectionObserver that adds .is-visible to [data-reveal]
     slideshow.ts              # hero image crossfade
+    tracking.ts               # silent page-view beacon (POSTs to /api/track on every Layout page)
+    tracking-dashboard.ts     # /tracking page renderer (fetches /api/stats, draws SVG chart)
 public/
   images/
     projects/                 # project screenshots (referenced by /images/projects/…)
@@ -61,6 +63,8 @@ public/
   og.png                      # social card
 src/hero2/                    # local staging area for user-supplied source images
                               # NOT deployed; assets here are copied into public/images/personality/
+server/                       # Node + SQLite tracking service. NOT in dist/. See server/README.md
+                              # and howtodeploy.md for VPS setup. Runs on :4322 behind nginx /api/.
 tailwind.config.mjs           # all design tokens live here
 ```
 
@@ -81,6 +85,10 @@ Contact        (06 — Contact)
 ```
 
 Note: `Beyond the Code` and `Pet Projects` are both rendered from a single component import (`<Personality />` → `src/components/sections/Personality.astro`) but emit **two sibling `<section>` elements** with `id="beyond-the-code"` and `id="pet-projects"`. Both use `min-h-screen flex flex-col justify-center py-section px-6` so each gets its own full-viewport real estate. The pet-projects block is a stack of full-width feature rows (image on one side, text on the other) with `lg:order-1/2` alternation per row; on mobile the image stacks above the text. Image aspect ratio is `16 / 9`.
+
+## Other pages
+
+- `/tracking` — private analytics dashboard (`src/pages/tracking.astro`). Not in the main nav. Loads `src/scripts/tracking-dashboard.ts` which fetches `/api/stats` from the Node tracking service (see `server/`). The page itself is not tracked (the tracking pixel skips `/tracking` paths client-side).
 
 ## Design system — read these two files first
 
