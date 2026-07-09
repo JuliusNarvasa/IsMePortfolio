@@ -5,31 +5,37 @@ export default {
   theme: {
     extend: {
       colors: {
-        bg: '#0B0F14',
-        'bg-elevated': '#11161D',
-        'bg-overlay': '#1A2230',
-        'bg-glass': 'rgba(17, 22, 29, 0.6)',
-        'bg-glass-strong': 'rgba(17, 22, 29, 0.85)',
-        text: '#E6EAF0',
-        'text-muted': '#8A93A0',
-        'text-dim': '#5C616A',
+        // All surface/text/accent/border tokens resolve to the per-theme CSS
+        // variables defined in src/styles/global.css (one set per
+        // [data-theme="X"] rule). The default :root block and Personal theme
+        // share the same hex values, so the Personal visual is unchanged
+        // when the var() indirection kicks in for Business/Customer.
+        bg: 'var(--bg)',
+        'bg-elevated': 'var(--bg-elevated)',
+        'bg-overlay': 'var(--bg-overlay)',
+        'bg-glass': 'var(--bg-glass)',
+        'bg-glass-strong': 'var(--bg-glass-strong)',
+        text: 'var(--text)',
+        'text-muted': 'var(--text-muted)',
+        'text-dim': 'var(--text-dim)',
         accent: {
-          DEFAULT: '#14B8A6',
-          hover: '#2DD4BF',
-          muted: 'rgba(20, 184, 166, 0.15)',
-          glow: 'rgba(20, 184, 166, 0.35)',
+          DEFAULT: 'var(--accent)',
+          hover: 'var(--accent-hover)',
+          muted: 'var(--accent-muted)',
+          glow: 'var(--accent-glow)',
         },
+        'on-accent': 'var(--on-accent)',
         border: {
-          DEFAULT: 'rgba(255, 255, 255, 0.08)',
-          strong: 'rgba(255, 255, 255, 0.14)',
-          accent: 'rgba(20, 184, 166, 0.4)',
+          DEFAULT: 'var(--border)',
+          strong: 'var(--border-strong)',
+          accent: 'var(--accent-border)',
         },
         success: {
-          DEFAULT: '#22C55E',
-          muted: 'rgba(34, 197, 94, 0.15)',
+          DEFAULT: 'var(--success)',
+          muted: 'var(--success-muted)',
         },
-        warning: '#F59E0B',
-        danger: '#EF4444',
+        warning: 'var(--warning)',
+        danger: 'var(--danger)',
       },
 
       fontFamily: {

@@ -9,7 +9,9 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+/* Default (no data-theme set) = Personal, so the FOUC script falling
+   through still produces the same look as before. */
+html[data-theme="personal"] {
   /* Surfaces */
   --bg:                #0B0F14;
   --bg-elevated:       #11161D;
@@ -28,6 +30,7 @@
   --accent-muted:      rgba(20, 184, 166, 0.15);
   --accent-glow:       rgba(20, 184, 166, 0.35);
   --accent-border:     rgba(20, 184, 166, 0.4);
+  --on-accent:         #0B0F14;
 
   /* Borders */
   --border:            rgba(255, 255, 255, 0.08);
@@ -74,6 +77,143 @@
   --glass-blur: saturate(140%) blur(12px);
 }
 
+html[data-theme="business"] {
+  /* Surfaces */
+  --bg:                #0A0E1A;
+  --bg-elevated:       #11172A;
+  --bg-overlay:        #1A2240;
+  --bg-glass:          rgba(17, 23, 42, 0.6);
+  --bg-glass-strong:   rgba(17, 23, 42, 0.85);
+
+  /* Text */
+  --text:              #E5E9F2;
+  --text-muted:        #8B95A7;
+  /* Bumped from #5C6478 → #7F8AA6 to clear WCAG AA 4.5:1 on bg-overlay.
+     Original: 2.64:1 (FAIL). New: 4.52:1 (AA). See src/themes/tokens.ts. */
+  --text-dim:          #7F8AA6;
+
+  /* Accent — custom indigo with blue lean (#5B6CFF).
+     Between Stripe's #635BFF and Linear's #5E6AD2. Premium, executive-grade. */
+  --accent:            #5B6CFF;
+  --accent-hover:      #7C8BFF;
+  --accent-muted:      rgba(91, 108, 255, 0.15);
+  --accent-glow:       rgba(91, 108, 255, 0.35);
+  --accent-border:     rgba(91, 108, 255, 0.4);
+  --on-accent:         #FFFFFF;
+
+  /* Borders */
+  --border:            rgba(255, 255, 255, 0.08);
+  --border-strong:     rgba(255, 255, 255, 0.14);
+
+  /* Status */
+  --success:           #22C55E;
+  --success-muted:     rgba(34, 197, 94, 0.15);
+  --warning:           #F59E0B;
+  --danger:            #EF4444;
+
+  /* Shadows */
+  --shadow-subtle:     0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-glass:      0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  --shadow-elevated:   0 12px 48px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --shadow-accent-glow: 0 0 24px rgba(91, 108, 255, 0.30);
+
+  /* Radii (shared across themes) */
+  --radius-sm:         6px;
+  --radius-md:         10px;
+  --radius-lg:         16px;
+  --radius-xl:         24px;
+
+  /* Motion (shared across themes) */
+  --duration-fast:     150ms;
+  --duration-base:     200ms;
+  --duration-slow:     300ms;
+  --duration-slower:   500ms;
+  --ease-out-snappy:   cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-smooth:   cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out:       cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Spacing rhythm (shared) */
+  --space-section:       96px;
+  --space-section-tight: 64px;
+
+  /* Layout (shared) */
+  --container-wide: 84rem;
+  --container-content: 72rem;
+  --container-narrow: 56rem;
+  --container-prose: 42rem;
+
+  /* Glass effect preset (shared) */
+  --glass-blur: saturate(140%) blur(12px);
+}
+
+html[data-theme="customer"] {
+  /* Surfaces — warm purple-black, slightly deeper than the placeholder */
+  --bg:                #0E0A18;
+  --bg-elevated:       #1B1326;
+  --bg-overlay:        #251B33;
+  --bg-glass:          rgba(27, 19, 38, 0.6);
+  --bg-glass-strong:   rgba(27, 19, 38, 0.85);
+
+  /* Text — warm white with a faint purple cast */
+  --text:              #F5F0FF;
+  --text-muted:        #A99CC4;
+  /* Bumped from #6F6486 → #8E80AC to clear WCAG AA 4.5:1 on bg-overlay.
+     Original: 2.99:1 (FAIL). New: 4.55:1 (AA). See src/themes/tokens.ts. */
+  --text-dim:          #8E80AC;
+
+  /* Accent — vibrant magenta-pink (#FF2D87) */
+  --accent:            #FF2D87;
+  --accent-hover:      #FF4F9F;
+  --accent-muted:      rgba(255, 45, 135, 0.15);
+  --accent-glow:       rgba(255, 45, 135, 0.35);
+  --accent-border:     rgba(255, 45, 135, 0.4);
+  --on-accent:         #FFFFFF;
+
+  /* Borders */
+  --border:            rgba(255, 255, 255, 0.08);
+  --border-strong:     rgba(255, 255, 255, 0.14);
+
+  /* Status */
+  --success:           #22C55E;
+  --success-muted:     rgba(34, 197, 94, 0.15);
+  --warning:           #F59E0B;
+  --danger:            #EF4444;
+
+  /* Shadows */
+  --shadow-subtle:     0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-glass:      0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  --shadow-elevated:   0 12px 48px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --shadow-accent-glow: 0 0 32px rgba(255, 45, 135, 0.32);
+
+  /* Radii (shared across themes) */
+  --radius-sm:         6px;
+  --radius-md:         10px;
+  --radius-lg:         16px;
+  --radius-xl:         24px;
+
+  /* Motion (shared across themes) */
+  --duration-fast:     150ms;
+  --duration-base:     200ms;
+  --duration-slow:     300ms;
+  --duration-slower:   500ms;
+  --ease-out-snappy:   cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-smooth:   cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out:       cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Spacing rhythm (shared) */
+  --space-section:       96px;
+  --space-section-tight: 64px;
+
+  /* Layout (shared) */
+  --container-wide: 84rem;
+  --container-content: 72rem;
+  --container-narrow: 56rem;
+  --container-prose: 42rem;
+
+  /* Glass effect preset (shared) */
+  --glass-blur: saturate(140%) blur(12px);
+}
+
 html {
   background: var(--bg);
   color: var(--text);
@@ -101,21 +241,12 @@ body {
   background: var(--accent-muted);
 }
 
-/* Scroll reveal animation */
-[data-reveal] {
-  opacity: 0;
-  transform: translateY(12px);
-  transition: opacity 500ms cubic-bezier(0.22, 1, 0.36, 1), transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+/* Hero slideshow — radial mask on the container, fades the corners into
+   transparent so the slideshow blends with the surrounding bg. */
+.hero-slideshow {
+  -webkit-mask-image: radial-gradient(ellipse 90% 85% at 50% 50%, black 30%, transparent 100%);
+  mask-image: radial-gradient(ellipse 90% 85% at 50% 50%, black 30%, transparent 100%);
 }
-[data-reveal].is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-[data-reveal][data-reveal-delay="80"] { transition-delay: 80ms; }
-[data-reveal][data-reveal-delay="160"] { transition-delay: 160ms; }
-[data-reveal][data-reveal-delay="240"] { transition-delay: 240ms; }
-[data-reveal][data-reveal-delay="320"] { transition-delay: 320ms; }
-[data-reveal][data-reveal-delay="400"] { transition-delay: 400ms; }
 
 /* Hero slideshow crossfade */
 .hero-slide {
@@ -196,6 +327,26 @@ body {
   background: var(--accent-muted);
   color: var(--accent);
 }
+
+/* Scroll reveal animation — used by the standalone tracking dashboard page,
+   which is still Astro markup. The main Personal theme (and Business/Customer)
+   uses the React `Reveal` wrapper in src/themes/shared/Reveal.tsx with
+   framer-motion, which doesn't depend on these CSS rules. Kept here so the
+   tracking page can keep its fade-in cadence. */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 500ms cubic-bezier(0.22, 1, 0.36, 1), transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+[data-reveal][data-reveal-delay="80"] { transition-delay: 80ms; }
+[data-reveal][data-reveal-delay="160"] { transition-delay: 160ms; }
+[data-reveal][data-reveal-delay="240"] { transition-delay: 240ms; }
+[data-reveal][data-reveal-delay="320"] { transition-delay: 320ms; }
+[data-reveal][data-reveal-delay="400"] { transition-delay: 400ms; }
 
 /* Pet-projects slideshow crossfade */
 .pet-slide {
@@ -280,6 +431,10 @@ body {
     scroll-behavior: auto !important;
   }
   [data-reveal] {
+    /* Kept for safety: any stray [data-reveal] element elsewhere in the bundle
+       (e.g. a third-party component) still ends up visible under reduced
+       motion. The React `Reveal` wrapper honours prefers-reduced-motion via
+       useReducedMotion() and doesn't depend on these rules. */
     opacity: 1;
     transform: none;
   }

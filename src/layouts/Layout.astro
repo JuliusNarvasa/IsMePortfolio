@@ -13,8 +13,28 @@ import '../styles/global.css';
 ---
 
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="personal">
   <head>
+    {/* Theme bootstrap — runs synchronously before paint to avoid FOUC.
+        Reads the saved theme from localStorage and sets `data-theme` on
+        <html> so the correct CSS variable set is applied before the
+        first render. Falls through silently if localStorage is
+        unavailable (private mode, quota, etc.) — the default
+        :root / html[data-theme="personal"] block in global.css
+        provides the fallback tokens. */}
+    <script is:inline>
+      (function () {
+        try {
+          var t = localStorage.getItem('portfolio-theme');
+          if (t === 'personal' || t === 'business' || t === 'customer') {
+            document.documentElement.dataset.theme = t;
+          }
+        } catch (e) {
+          /* noop — fall back to default tokens */
+        }
+      })();
+    </script>
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
@@ -44,9 +64,6 @@ import '../styles/global.css';
   </head>
   <body>
     <slot />
-    <script>
-      import '../scripts/reveal.ts';
-    </script>
     <script>
       import '../scripts/tracking.ts';
     </script>
