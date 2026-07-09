@@ -141,6 +141,7 @@ Each project is an object in the `projects` array with `slug`, `title`, `categor
 - **Do not commit `src/hero2/`.** It's a local staging area, not a source of truth. Deployed assets live in `public/images/`.
 - **Do not edit `dist/`.** It's the build output. Run `npm run build` to regenerate.
 - **Do not add tests, linters, or formatters** unless the user asks. There are intentionally none.
+- **Do not use any browser to debug or verify changes.** No Playwright, headless Chrome, screenshot tools, DOM scraping, navigation, or visual inspection — the user reviews changes in their own browser. Validate via build output, file inspection, and code-level reasoning only. If a problem can only be confirmed visually, say so and stop.
 
 ## When you're done
 
