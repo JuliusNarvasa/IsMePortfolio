@@ -316,10 +316,18 @@ const petProjectsImageSources = projects.map((p) => p.images.map((i) => i.src));
 
 {/* Auto-cycle script: rotates through the active project's images, then
     advances to the next project and resets. Clicking a list item jumps to
-    that project and restarts the 5s timer. Image crossfade is CSS-driven via
-    the .is-active class — see .pet-slide / .pet-slide.is-active in global.css.
-    Tile details collapse/expand is JS-driven via the Web Animations API so
-    the collapse happens the moment a tile is no longer the selected one. */}
+    that project and restarts the 5s timer.
+
+    The collapse/expand of each tile's details is CSS-driven via a
+    `max-height` transition on [data-pet-details] (see global.css). JS
+    measures each tile's natural content height and stores it on a
+    `--pet-details-height` custom property; the active-state rule reads
+    that variable as its expanded max-height, so the transition
+    (0 → natural) ends exactly when the content is fully revealed. JS
+    only toggles `aria-current` — the browser runs the outgoing collapse
+    and the incoming expand as two independent CSS transitions in parallel,
+    so they always start together and there's no animation state to leak
+    across rapid clicks. */}
 <script is:inline>
   (() => {
     const dataEl = document.getElementById('pet-projects-data');
@@ -333,7 +341,6 @@ const petProjectsImageSources = projects.map((p) => p.images.map((i) => i.src));
     if (!Array.isArray(projects) || projects.length === 0) return;
 
     const INTERVAL_MS = 5000;
-    const EXPAND_DURATION_MS = 300;
     let activeProject = 0;
     let activeImage = 0;
     let intervalId = null;
@@ -352,151 +359,57 @@ const petProjectsImageSources = projects.map((p) => p.images.map((i) => i.src));
       if (target) target.classList.add('is-active');
     }
 
-    function showListItem() {
-      listItems.forEach((btn, i) => {
+    // Measure a tile's natural content height and write it to the
+    // --pet-details-height custom property. We temporarily uncap the
+    // max-height so the content lays out at its true size, read
+    // offsetHeight, then restore the previous inline style.
+    function measureDetails(details) {
+      const prevMax = details.style.maxHeight;
+      const prevMargin = details.style.marginTop;
+      details.style.maxHeight = 'none';
+      details.style.marginTop = '0.75rem';
+      const naturalHeight = details.offsetHeight;
+      details.style.maxHeight = prevMax;
+      details.style.marginTop = prevMargin;
+      details.style.setProperty('--pet-details-height', naturalHeight + 'px');
+    }
+
+    function measureAll() {
+      listItems.forEach((btn) => {
         const details = btn.querySelector('[data-pet-details]');
-        if (i === activeProject) {
-          btn.setAttribute('aria-current', 'true');
-          // Force-expanded: pin the active tile's details to auto so the
-          // text is always visible, regardless of any stale animation
-          // state from the Web Animations API. The CSS rule for
-          // aria-current="true" also applies (height: auto) — this is
-          // belt-and-braces.
-          if (details) {
-            details.getAnimations().forEach((a) => a.cancel());
-            details.style.height = 'auto';
-            details.style.marginTop = '0.75rem';
-          }
-        } else {
-          btn.removeAttribute('aria-current');
-          if (details) {
-            // Cancel any in-flight animation. We deliberately do NOT
-            // set an inline height here — the CSS !important rule for
-            // non-active tiles (height: 0) handles the hiding. Setting
-            // an inline height would force collapseTile to short-circuit
-            // and kill the smooth collapse animation.
-            details.getAnimations().forEach((a) => a.cancel());
-          }
-          // Clean up .is-collapsing from any tile whose collapse
-          // animation was interrupted (e.g., a rapid click on a
-          // third tile). Without this, the !important override would
-          // keep the tile at auto and its text would stay visible.
-          btn.classList.remove('is-collapsing');
-        }
+        if (details) measureDetails(details);
       });
     }
 
-    // Collapse a tile's details with a smooth animation that mirrors expandTile.
-    // The caller (switchProject) is expected to have added the .is-collapsing
-    // class to the tile — that class has !important CSS that overrides the
-    // inactive-tile !important rule, keeping the element at its natural height
-    // so this animation can run. We remove the class in onfinish (and in the
-    // short-circuit path) so the !important inactive rule reasserts and the
-    // tile stays at 0.
-    //
-    // If the tile is already collapsed (offsetHeight 0), the call short-
-    // circuits — no point animating from 0 to 0. This happens in the rapid-
-    // click case where a third tile's switchProject canceled our animation
-    // and the CSS !important already forced the height to 0.
-    function collapseTile(tile) {
-      const details = tile.querySelector('[data-pet-details]');
-      if (!details) return;
-      details.getAnimations().forEach((a) => a.cancel());
-
-      const startHeight = details.offsetHeight;
-      if (startHeight === 0) {
-        details.style.height = '0px';
-        details.style.marginTop = '0';
-        tile.classList.remove('is-collapsing');
-        return;
-      }
-
-      // Set the starting state explicitly and force a reflow so the browser
-      // registers it before the animation kicks off.
-      details.style.height = startHeight + 'px';
-      details.style.marginTop = '0.75rem';
-      void details.offsetHeight;
-
-      // Animate from the current rendered height down to 0. `fill: 'forwards'`
-      // holds the final collapsed state. onfinish pins the inline style and
-      // removes .is-collapsing so the !important inactive CSS rule takes over.
-      const animation = details.animate(
-        [
-          { height: startHeight + 'px', marginTop: '0.75rem' },
-          { height: '0px', marginTop: '0' },
-        ],
-        {
-          duration: EXPAND_DURATION_MS,
-          easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
-          fill: 'forwards',
-        }
-      );
-      animation.onfinish = () => {
-        details.style.height = '0px';
-        details.style.marginTop = '0';
-        tile.classList.remove('is-collapsing');
-      };
+    // Initial measurement, before any transitions could run.
+    measureAll();
+    // Re-measure once web fonts have settled — text wrapping can change
+    // the natural height after the initial measurement.
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(measureAll);
     }
-
-    // Expand a tile's details with a smooth animation. Measures the natural
-    // height (with margin-top: 0.75rem) and animates from 0 to that value
-    // using the Web Animations API. `fill: forwards` keeps the final state;
-    // onfinish releases the inline height back to `auto` so the layout stays
-    // healthy if the content ever changes.
-    function expandTile(tile) {
-      const details = tile.querySelector('[data-pet-details]');
-      if (!details) return;
-      details.getAnimations().forEach((a) => a.cancel());
-
-      // Measure natural height with the expanded margin-top.
-      const prevHeight = details.style.height;
-      const prevMargin = details.style.marginTop;
-      details.style.height = 'auto';
-      details.style.marginTop = '0.75rem';
-      const naturalHeight = details.offsetHeight;
-      details.style.height = prevHeight;
-      details.style.marginTop = prevMargin;
-
-      // Set the starting state and force a reflow so the browser registers
-      // it before the animation kicks off (otherwise it skips to the end).
-      details.style.height = '0px';
-      details.style.marginTop = '0';
-      void details.offsetHeight;
-
-      const animation = details.animate(
-        [
-          { height: '0px', marginTop: '0' },
-          { height: naturalHeight + 'px', marginTop: '0.75rem' },
-        ],
-        {
-          duration: EXPAND_DURATION_MS,
-          easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
-          fill: 'forwards',
-        }
-      );
-      animation.onfinish = () => {
-        details.style.height = 'auto';
-        details.style.marginTop = '0.75rem';
-      };
-    }
+    // Re-measure on resize (debounced) — viewport changes can re-wrap text.
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(measureAll, 200);
+    });
 
     function switchProject(newIndex) {
       if (newIndex === activeProject) return;
-      const oldIndex = activeProject;
       activeProject = newIndex;
       activeImage = 0;
-      showListItem();
+      // aria-current is the single source of truth — toggling it kicks
+      // off two independent CSS transitions (collapse + expand) in
+      // parallel, with no JS-side animation coordination.
+      listItems.forEach((btn, i) => {
+        if (i === activeProject) {
+          btn.setAttribute('aria-current', 'true');
+        } else {
+          btn.removeAttribute('aria-current');
+        }
+      });
       showImage();
-      // Mark the outgoing tile as collapsing so the CSS !important rule
-      // for inactive tiles (height: 0) doesn't force it to 0 before
-      // collapseTile can animate. The .is-collapsing class has higher
-      // specificity and overrides with `height: auto !important`, holding
-      // the element at its natural height for the animation. collapseTile
-      // removes the class in onfinish.
-      const oldTile = listItems[oldIndex];
-      oldTile.classList.add('is-collapsing');
-      collapseTile(oldTile);
-      expandTile(listItems[newIndex]);
     }
 
     function advance() {
@@ -505,7 +418,7 @@ const petProjectsImageSources = projects.map((p) => p.images.map((i) => i.src));
         activeImage++;
         showImage();
       } else {
-        // Roll over to the next project: 0th image + animated tile switch.
+        // Roll over to the next project: 0th image + CSS-driven tile switch.
         activeImage = 0;
         switchProject((activeProject + 1) % projects.length);
       }
@@ -516,9 +429,9 @@ const petProjectsImageSources = projects.map((p) => p.images.map((i) => i.src));
       intervalId = setInterval(advance, INTERVAL_MS);
     }
 
-    // Initial state: project 0, image 0. The first tile's details are already
-    // expanded by CSS (aria-current="true" in the markup) — no animation needed.
-    showListItem();
+    // Initial state: project 0, image 0. The first tile already has
+    // aria-current="true" in the markup, so CSS handles its expanded state
+    // from page load — no initial animation needed.
     showImage();
     startInterval();
 

@@ -220,32 +220,28 @@ body {
   color: var(--accent);
 }
 
-/* Pet-projects list-item details: collapsed by default, expanded via aria-current.
-   The CSS only declares the static states — JS handles the actual animation
-   (animated collapse, animated expand) via the Web Animations API. No CSS
-   transitions, no max-height / grid-template-rows tricks. */
+/* Pet-projects tile details: collapsed by default, expanded via aria-current.
+   The max-height transition animates the accordion open/close. JS measures
+   each tile's natural content height on init (and again after web fonts
+   load / on window resize) and stores it on a `--pet-details-height` CSS
+   variable. The transition ends exactly when the content is fully
+   revealed, with no "dead time" at the end and no fr-unit snap.
+
+   Because collapse and expand are two independent CSS transitions on
+   different elements, the browser runs them in parallel automatically. JS
+   only needs to toggle aria-current; there is no animation coordination,
+   no inline-style state to leak across rapid clicks, and no onfinish
+   cleanup to miss when an animation is cancelled mid-flight. */
 [data-pet-list-item] [data-pet-details] {
+  max-height: 0;
+  margin-top: 0;
   overflow: hidden;
-}
-[data-pet-list-item]:not([aria-current="true"]) [data-pet-details] {
-  /* !important is the safety net: even if a stale Web Animations fill or a
-     missed inline-style write leaves an inactive tile's details non-zero,
-     this rule forces the collapse. The active-tile rule below has equal
-     specificity, so it wins for aria-current="true" without needing !important. */
-  height: 0 !important;
-  margin-top: 0 !important;
+  transition: max-height 300ms var(--ease-out-snappy),
+              margin-top 300ms var(--ease-out-snappy);
 }
 [data-pet-list-item][aria-current="true"] [data-pet-details] {
-  height: auto;
+  max-height: var(--pet-details-height, 1000px);
   margin-top: 0.75rem;
-}
-/* While a tile is mid-collapse, keep it at its natural height so the
-   Web Animations API can animate from that height down to 0. Higher
-   specificity beats the :not() rule above; the class is removed in
-   collapseTile's onfinish so the !important rule takes over. */
-[data-pet-list-item].is-collapsing [data-pet-details] {
-  height: auto !important;
-  margin-top: 0.75rem !important;
 }
 
 /* Tree node styles */
@@ -294,5 +290,15 @@ body {
   .pet-slide,
   .hero-slide {
     transition: opacity 0.8s ease-in-out !important;
+  }
+  /* Pet-projects tile details accordion: the max-height transition is a
+     functional UI cue (revealing content the user just clicked on), not
+     decorative motion. Without this exemption the universal
+     `transition-duration: 0.01ms` rule above makes the collapse/expand
+     snap to its end state with no visible animation. Restoring the 300ms
+     transition lets the user actually see the accordion open/close. */
+  [data-pet-list-item] [data-pet-details] {
+    transition: max-height 300ms var(--ease-out-snappy),
+                margin-top 300ms var(--ease-out-snappy) !important;
   }
 }
