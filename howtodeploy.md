@@ -2,47 +2,71 @@
 
 How to deploy this portfolio site to `me.bambaw-tumba.com`.
 
+**The deploy target is the same machine Hermes runs on** — this box (`reverseproxy`, public IP `158.101.135.83`). There is no scp/ssh round-trip anymore: build locally, sync locally, done.
+
 ## Infrastructure
 
-- **VPS:** `158.101.135.83`
+- **VPS (this machine):** `158.101.135.83` — host `reverseproxy`, user `ubuntu` (the Hermes box)
 - **Domain:** `me.bambaw-tumba.com` (A record → VPS IP)
-- **Web server:** nginx with Let's Encrypt SSL
+- **Web server:** nginx with Let's Encrypt SSL (vhost: `/etc/nginx/sites-available/me.bambaw-tumba.com` → symlinked into `sites-enabled/`)
 - **Site root:** `/home/ubuntu/portfolio/`
-- **SSH key:** `D:\Documents\sshkeys\jpreverseprox`
+- **Repo clone (local):** `/mnt/sdb/hermes/workspace/IsMePortfolio`
+- **Node:** system node is v18.19.1, but Astro 5.7 requires `>=18.20.8` — **use the nvm node 20** (`/home/ubuntu/.nvm/versions/node/v20.20.2/bin`)
 
-## Deploy steps (PowerShell)
+## Deploy steps (from the Hermes box)
 
-Run from the project root:
+Run on this machine:
+
+```bash
+cd /mnt/sdb/hermes/workspace/IsMePortfolio
+
+# Astro 5.7 needs Node >=18.20.8; system node is 18.19.1 — use nvm node 20
+export PATH=/home/ubuntu/.nvm/versions/node/v20.20.2/bin:$PATH
+
+# First time only (or after package-lock.json changes)
+npm ci
+
+# Build — Astro generates static HTML into dist/
+npm run build
+
+# Sync to site root. --delete mirrors dist/ exactly (stale assets removed);
+# server/ holds the tracking service and is NEVER touched.
+rsync -a --delete --exclude server/ dist/ /home/ubuntu/portfolio/
+
+# Record the deploy (source changes, not dist/ — it's gitignored)
+git add -A && git commit -m "Deploy message here" && git push
+```
+
+No nginx reload needed for static file changes. Verify:
+
+```bash
+curl -s -o /dev/null -w '%{http_code}\n' https://me.bambaw-tumba.com          # 200
+curl -s -o /dev/null -w '%{http_code}\n' https://me.bambaw-tumba.com/tracking/ # 200
+```
+
+## Alternative: deploy from a Windows machine (legacy)
+
+Run from the project root in PowerShell. Still works, but you no longer need to
+SSH into the VPS — Hermes can do it from the box directly.
 
 ```powershell
 Remove-Item dist -Recurse -Force -ErrorAction SilentlyContinue
 npm run build
 tar -czf dist.tar.gz -C dist .
 scp -i "D:\Documents\sshkeys\jpreverseprox" dist.tar.gz ubuntu@158.101.135.83:/home/ubuntu/portfolio/dist.tar.gz
-ssh -i "D:\Documents\sshkeys\jpreverseprox" ubuntu@158.101.135.83 "cd /home/ubuntu/portfolio && rm -rf _astro images heroimages index.html favicon.svg og.png .gitkeep && tar -xzf dist.tar.gz && rm dist.tar.gz"
+ssh -i "D:\Documents\sshkeys\jpreverseprox" ubuntu@158.101.135.83 "cd /home/ubuntu/portfolio && rm -rf _astro images heroimages tracking index.html favicon.svg og.png .gitkeep && tar -xzf dist.tar.gz && rm dist.tar.gz"
 Remove-Item dist.tar.gz
-```
-
-### One-liner
-
-```powershell
-Remove-Item dist -Recurse -Force; npm run build; tar -czf dist.tar.gz -C dist .; scp -i "D:\Documents\sshkeys\jpreverseprox" "dist.tar.gz" "ubuntu@158.101.135.83:/home/ubuntu/portfolio/dist.tar.gz"; ssh -i "D:\Documents\sshkeys\jpreverseprox" ubuntu@158.101.135.83 "cd /home/ubuntu/portfolio && rm -rf _astro images heroimages tracking index.html favicon.svg og.png .gitkeep && tar -xzf dist.tar.gz && rm dist.tar.gz"
-```
-
-### After deploy (commit + push)
-
-```powershell
-git add -A && git commit -m "Deploy message here" && git push
 ```
 
 ## What the deploy does
 
-1. Delete local `dist/` (prevents SSR artifact contamination from prior builds)
-2. `npm run build` — Astro generates static HTML into `dist/`
-3. `tar` the dist folder into a single archive (avoids PowerShell glob bug with `scp -r dist\*` that skips `index.html`)
-4. SCP the tarball to the VPS
-5. SSH in and clean up old deployed files (`_astro/`, `images/`, `heroimages/`, `tracking/`, `index.html`, `favicon.svg`, `og.png`, `.gitkeep`) — this prevents stale assets from lingering. `tracking/` is included so a removed/changed `/tracking` page is wiped cleanly between deploys.
-6. Extract the tarball and remove the archive
+1. `npm ci` — install locked dependencies (system node 18 is too old for Astro 5.7; nvm node 20 is the supported one)
+2. `npm run build` — Astro generates static HTML into `dist/` (2 pages: index + tracking)
+3. `rsync -a --delete --exclude server/` — mirrors `dist/` into `/home/ubuntu/portfolio/`:
+   - replaces `_astro/`, `images/`, `heroimages/`, `tracking/`, `index.html`, `favicon.svg`, `og.png`
+   - removes anything stale, including `.gitkeep` (so a removed/changed `/tracking` page is wiped cleanly between deploys)
+   - `server/` (the tracking service) is excluded — it lives outside the static build
+4. `git commit && git push` — the repo records what was deployed
 
 ## Nginx config
 
@@ -119,29 +143,37 @@ sudo nginx -t && sudo systemctl reload nginx
 
 ## Tracking service
 
-The site records pageviews via a small Node + SQLite service. It is **not** part of the static build — it lives in `server/` and runs as a systemd unit. Full first-time setup is in [`server/README.md`](server/README.md). The two-line version:
+The site records pageviews via a small Node + SQLite service. It is **not** part of the static build — it lives in `server/` and runs as a systemd unit (`portfolio-tracking`, active on this box). Full first-time setup is in [`server/README.md`](server/README.md). The two-line version:
 
 ```bash
 npm --prefix /home/ubuntu/portfolio/server install
 sudo cp /home/ubuntu/portfolio/server/systemd/portfolio-tracking.service /etc/systemd/system/ && sudo systemctl daemon-reload && sudo systemctl enable --now portfolio-tracking
 ```
 
-After that, see "If the tracking service is deployed" above for the per-deploy restart step.
+### If the tracking service is deployed
 
-## SSH access
-
-```bash
-ssh -i "D:\Documents\sshkeys\jpreverseprox" ubuntu@158.101.135.83
-```
-
-To restart nginx on the VPS:
+Because `server/` is excluded from the rsync, **static deploys do not affect it and it does not need a restart.** Restart it only after changing `server/` code (and syncing it to `/home/ubuntu/portfolio/server/`):
 
 ```bash
-sudo nginx -t && sudo systemctl reload nginx
+sudo systemctl restart portfolio-tracking
+sudo systemctl status portfolio-tracking --no-pager
 ```
+
+## Access
+
+No SSH needed from Hermes — the site root and nginx are on this box:
+
+```bash
+sudo nginx -t && sudo systemctl reload nginx   # after nginx edits
+sudo systemctl status portfolio-tracking        # tracking service
+```
+
+To reach this machine from the Windows desktop, SSH in as `ubuntu@158.101.135.83` (key: `D:\Documents\sshkeys\jpreverseprox`).
 
 ## Git repo
 
-- Remote: `git@github.com:JuliusNarvasa/IsMePortfolio.git`
-- Global git config: `core.sshCommand` set, `user.name = Julius Narvasa`, `user.email = jibnarvasa@gmail.com`
+- Remote: `git@github.com:JuliusNarvasa/IsMePortfolio.git` (SSH key on this box: `~/.ssh/id_ed25519`)
+- Local clone used for deploys: `/mnt/sdb/hermes/workspace/IsMePortfolio`
+- Branches: `master` = deployed line (merged from `funbranch` 2026-08-01); `themes` = React theme migration (not deployed)
+- Windows machine git config: `user.name = Julius Narvasa`, `user.email = jibnarvasa@gmail.com`
 - GpuVramMonitor SSH key: `D:\Documents\sshkeys\bambaw-github-openssh-private`
