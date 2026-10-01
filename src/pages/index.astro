@@ -3,12 +3,11 @@ import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import Hero from '../components/sections/Hero.astro';
-import Personality from '../components/sections/Personality.astro';
-import Projects from '../components/sections/Projects.astro';
-import Infrastructure from '../components/sections/Infrastructure.astro';
-import AILab from '../components/sections/AILab.astro';
 import Experience from '../components/sections/Experience.astro';
-import Building from '../components/sections/Building.astro';
+import Projects from '../components/sections/Projects.astro';
+import Stack from '../components/sections/Stack.astro';
+import Personality from '../components/sections/Personality.astro';
+import Lab from '../components/sections/Lab.astro';
 import Contact from '../components/sections/Contact.astro';
 ---
 
@@ -19,13 +18,13 @@ import Contact from '../components/sections/Contact.astro';
     Skip to content
   </a>
   <main id="main">
+    {/* Proof first (who, what level, what shipped), personality second. */}
     <Hero />
-    <Personality />
-    <Projects />
-    <Infrastructure />
-    <AILab />
     <Experience />
-    <Building />
+    <Projects />
+    <Stack />
+    <Personality />
+    <Lab />
     <Contact />
   </main>
   <Footer />

@@ -1,17 +1,25 @@
 ---
-const buildDate = '2026-06-18';
+import { site } from '../config/site';
+
+// Stamped at build time, so it only changes when the site is actually rebuilt.
+const buildDate = new Date().toISOString().slice(0, 10);
+const year = buildDate.slice(0, 4);
 ---
 
 <footer class="border-t border-border bg-bg">
   <div class="mx-auto flex max-w-wide flex-col items-center justify-between gap-3 px-6 py-12 md:flex-row md:py-16">
     {/* Copyright */}
     <p class="font-mono-sm text-text-dim">
-      &copy; 2026 Julius Narvasa
+      &copy; {year} {site.name}
     </p>
 
-    {/* Last updated */}
-    <p class="font-mono-sm text-text-dim hidden md:block">
-      last updated: {buildDate}
+    {/* Build stamp + source */}
+    <p class="font-mono-sm text-text-dim">
+      built {buildDate}
+      <span class="mx-2">·</span>
+      <a href={site.repo} target="_blank" rel="noopener noreferrer" class="transition-colors duration-fast hover:text-text">
+        source ↗ <span class="hidden sm:inline">(omg recursion)</span>
+      </a>
     </p>
 
     {/* Back to top */}

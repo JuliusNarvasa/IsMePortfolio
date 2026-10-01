@@ -4,7 +4,7 @@ Guidance for AI coding agents working on this repo.
 
 ## What this is
 
-A personal developer portfolio for Julius Narvasa. Single-page Astro site with a dark, slightly-terminal aesthetic. Static output deployed to `https://me.bambaw-tumba.com`. The site is intentionally not a résumé — it shows personality, real shipped projects, live infrastructure, and a timeline.
+A personal developer portfolio for Julius Narvasa. Single-page Astro site with a dark, slightly-terminal aesthetic. Static output deployed to `https://me.bambaw-tumba.com`. It has to work for two readers: a recruiter skimming for 30 seconds (level, shipped work, résumé, contact) and an engineer who wants to see how Julius thinks. Proof comes first on the page, personality second, and the voice stays personal throughout.
 
 **Stack:** Astro 5 (static output) · React 18 islands · Tailwind CSS 3 · TypeScript · `@fontsource` Inter + JetBrains Mono.
 
@@ -23,21 +23,24 @@ There are no tests, no linter, and no formatter wired up. Keep changes minimal a
 
 ```
 src/
+  config/
+    site.ts                   # name, role, years, résumé URL, handles: single source of truth
+  data/
+    experience.ts             # work history (employers → engagements); hero counts derive from it
   layouts/
-    Layout.astro              # <html> shell, <head>, OG/Twitter meta, dark theme
+    Layout.astro              # <html> shell, <head>, OG/Twitter meta, JSON-LD Person, dark theme
   pages/
     index.astro               # composes the single page; section order lives here
   components/
     Nav.astro                 # sticky top nav + active-section IntersectionObserver
     Footer.astro              # build-date + back-to-top
     sections/                 # one .astro per page section
-      Hero.astro
-      Personality.astro
-      Projects.astro
-      Infrastructure.astro
-      AILab.astro
-      Experience.astro
-      Building.astro
+      Hero.astro              # intro, at-a-glance facts, résumé CTA
+      Experience.astro        # employers → engagements (role, highlights, outcome)
+      Projects.astro          # "Selected work": client case studies first, then side projects
+      Stack.astro             # grouped skill badges
+      Personality.astro       # "Beyond the Code" + pet projects
+      Lab.astro               # homelab / cloud / local AI / on-the-bench
       Contact.astro
     ui/                       # reusable building blocks
       SectionHeader.astro     # eyebrow + title + description pattern
@@ -47,6 +50,7 @@ src/
       StatusRow.astro
       TreeNode.astro          # recursive tree with status dots
       HandleRow.astro         # contact handle row (label · value · link)
+      ResumeLink.astro        # résumé button; hidden in prod while site.resumeUrl is empty
   styles/
     global.css                # CSS variables, base layer, [data-reveal] animation, .tree styles
   scripts/
@@ -70,21 +74,20 @@ tailwind.config.mjs           # all design tokens live here
 
 ## Section order in `src/pages/index.astro`
 
-The page composes sections in this fixed order. Keep the `00`-prefixed sections at the top of the file so the eyebrow numbering (`00 — Beyond the code`, `01 — Projects`, …) stays logical.
+The page composes sections in this fixed order: proof first (who, what level, what shipped), personality second. Don't move personality sections above Experience/Work.
 
 ```
-Hero           (no number; full-viewport intro)
-Beyond the Code(00 — Beyond the code; narrative + interests; full-viewport)
-Pet Projects   (no number; // pet_projects.built_from_frustration; full-viewport)
-Projects       (01 — Projects)
-Infrastructure (02 — Infrastructure)
-AILab          (03 — AI Lab)
-Experience     (04 — Experience)
-Building       (05 — Now)
+Hero           (no number; full-viewport intro + at-a-glance facts)
+Experience     (01 — Experience)
+Projects       (02 — Work; "Selected work")
+Stack          (03 — Stack)
+Beyond the Code(04 — About; narrative + interests)
+Pet Projects   (no number; // pet_projects.built_from_frustration)
+Lab            (05 — Lab; homelab, cloud, local AI, on the bench)
 Contact        (06 — Contact)
 ```
 
-Note: `Beyond the Code` and `Pet Projects` are both rendered from a single component import (`<Personality />` → `src/components/sections/Personality.astro`) but emit **two sibling `<section>` elements** with `id="beyond-the-code"` and `id="pet-projects"`. Both use `min-h-screen flex flex-col justify-center py-section px-6` so each gets its own full-viewport real estate. The pet-projects block is a stack of full-width feature rows (image on one side, text on the other) with `lg:order-1/2` alternation per row; on mobile the image stacks above the text. Image aspect ratio is `16 / 9`.
+Note: `Beyond the Code` and `Pet Projects` are both rendered from a single component import (`<Personality />` → `src/components/sections/Personality.astro`) but emit **two sibling `<section>` elements** with `id="beyond-the-code"` and `id="pet-projects"`. Pet Projects uses `pb-section` (no top padding) so the two read as one block. The pet-projects block is a stack of full-width feature rows (image on one side, text on the other) with `lg:order-1/2` alternation per row; on mobile the image stacks above the text. Image aspect ratio is `16 / 9`.
 
 ## Other pages
 
@@ -117,13 +120,14 @@ Note: `Beyond the Code` and `Pet Projects` are both rendered from a single compo
 
 ## Adding a project to `Projects.astro`
 
-Each project is an object in the `projects` array with `slug`, `title`, `category`, `problem`, `challenges[]`, `tech[]`, `links`, and `screenshot`. The image lives in `public/images/projects/<slug>.png` (or `.jpg`).
+Each project is an object in the `projects` array with `slug`, `title`, `category`, `problem`, `challenges[]`, `tech[]`, `links`, and either `screenshot` or `diagram` (a plain-text architecture sketch for client work with nothing to screenshot; pair it with `note`). Client work goes before side projects. The image lives in `public/images/projects/<slug>.png` (or `.jpg`).
 
 ## Image assets
 
 - `public/heroimages/` — used by the hero slideshow (`Hero.astro`).
 - `public/images/projects/` — project screenshots referenced by `Projects.astro`.
 - `public/images/personality/` — images for the `Personality.astro` "Built Because It Annoyed Me" cards.
+- Keep deployed photos at ≤1600px on the long edge (hero: ≤1400px), JPEG ~70–80 quality: `sips -Z 1600 -s formatOptions 78 in.jpg --out out.jpg`. The site once shipped 41 MB of 4000px photos.
 - `src/hero2/` — **staging area for user-supplied source images only.** Files here are NOT deployed. Copy/convert into `public/images/<section>/` (prefer `.jpg`/`.png`; the browser renders `.bmp` but it's heavy).
 
 ## Tone & copy
@@ -132,6 +136,8 @@ Each project is an object in the `projects` array with `slug`, `title`, `categor
 - The site is the developer's voice, not a marketing page. Honest, grounded, slightly self-deprecating.
 - Project `problem` lines read as personal frustrations; `solution` lines describe the tool, not the achievement.
 - Interest cards have a concrete noun-phrase description, not an abstract theme statement.
+- **Never invent facts** in Experience, Work, or the hero facts strip: no made-up metrics, titles, or responsibilities. Missing numbers are marked `TODO(julius)` in the data, not guessed.
+- **Client confidentiality:** the only client products named publicly are **Ment** and **ChargeHeroes**. Every other client or project (including freelance) is described by what it is ("Retail rewards mobile app", "ISP billing platform"), never by client name or codename. Never publish performance ratings, manager names, or internal document links.
 
 ## Things to avoid
 

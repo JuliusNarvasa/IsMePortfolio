@@ -1,0 +1,41 @@
+---
+import SectionHeader from '../ui/SectionHeader.astro';
+import Tag from '../ui/Tag.astro';
+
+// Ordered by how much of my day each group takes: day-job tools first,
+// homelab tools last. Only list things used in a real project on this page.
+const groups = [
+  { label: 'Languages', items: ['C#', 'TypeScript', 'Python', 'JavaScript', 'SQL'] },
+  { label: 'Backend & APIs', items: ['.NET', 'FastAPI', 'Node.js', 'REST APIs', 'Multi-tenant design', 'pytest', 'WireMock'] },
+  { label: 'Payments', items: ['Stripe', 'GoCardless', 'Subscription billing'] },
+  { label: 'Data', items: ['Microsoft Fabric', 'Power BI', 'PostgreSQL', 'Redis', 'SQLite'] },
+  { label: 'Cloud & DevOps', items: ['Azure', 'Azure Front Door', 'Terraform', 'Bicep', 'GitHub Actions', 'Docker', 'Nginx', 'Linux', 'GCP', 'Oracle Cloud'] },
+  { label: 'Frontend & mobile', items: ['React', 'Cordova', 'Capacitor', 'AppsFlyer', 'Firebase', 'Astro', 'Tailwind CSS', 'WPF'] },
+  { label: 'AI & ML', items: ['llama.cpp', 'ROCm / HIP', 'YOLOv8', 'ONNX', 'OCR', 'OpenAI API', 'Playwright'] },
+  { label: 'Self-hosting', items: ['Proxmox', 'WireGuard', 'Tailscale', 'Grafana', 'n8n'] },
+];
+---
+
+<section id="stack" class="py-section px-6" aria-labelledby="section-stack-title">
+  <div class="mx-auto max-w-content">
+    <div data-reveal>
+      <SectionHeader
+        id="section-stack-title"
+        eyebrow="03 — Stack"
+        title="What I work with"
+        description="No progress bars. Day-job tools first, homelab toys last."
+      />
+    </div>
+
+    <dl class="divide-y divide-border rounded-lg border border-border bg-bg-glass backdrop-blur-glass" data-reveal>
+      {groups.map((group) => (
+        <div class="flex flex-col gap-3 px-6 py-4 md:flex-row md:items-baseline md:gap-8">
+          <dt class="w-44 flex-shrink-0 font-mono-sm uppercase tracking-wider text-text-dim">{group.label}</dt>
+          <dd class="flex flex-wrap gap-1.5">
+            {group.items.map((item) => <Tag label={item} />)}
+          </dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>

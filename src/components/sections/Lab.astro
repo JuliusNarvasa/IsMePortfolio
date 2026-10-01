@@ -1,0 +1,134 @@
+---
+import SectionHeader from '../ui/SectionHeader.astro';
+import TreeNode from '../ui/TreeNode.astro';
+import StatusRow from '../ui/StatusRow.astro';
+import StatusDot from '../ui/StatusDot.astro';
+
+const homelabTree = {
+  label: 'Proxmox · on-prem',
+  status: 'online' as const,
+  children: [
+    {
+      label: 'VM 100 · apps',
+      status: 'online' as const,
+      children: [
+        { label: 'Immich (Docker)', status: 'online' as const },
+        { label: 'Jellyfin (native)', status: 'online' as const },
+        { label: 'qBittorrent (native)', status: 'online' as const },
+      ],
+    },
+    {
+      label: 'VM 101 · networkwatcher',
+      status: 'online' as const,
+      description: 'Grafana dashboard graphing latency and downtime per ISP.',
+    },
+    { label: 'VM 102 · OmadaController', status: 'online' as const },
+    {
+      label: 'VM 103 · autoswitcher',
+      status: 'online' as const,
+      description: 'Cron job that tells the Omada controller to fail over to whichever ISP responds fastest.',
+    },
+  ],
+};
+
+const vpsTree = {
+  label: 'Oracle Cloud · ARM64 VPS',
+  status: 'online' as const,
+  children: [
+    { label: 'Nginx reverse proxy (public-facing)', status: 'online' as const },
+    { label: 'Re-Fuel API (.NET)', status: 'online' as const },
+    { label: 'AI Resume Builder (FastAPI)', status: 'online' as const },
+    { label: 'Portfolio tracking (Node + SQLite)', status: 'online' as const },
+    { label: 'PostgreSQL · Redis', status: 'online' as const },
+    { label: 'Ollama (embeddings)', status: 'online' as const },
+    { label: 'n8n · Vaultwarden · SillyTavern', status: 'online' as const },
+  ],
+};
+
+const networkTree = {
+  label: 'Networking',
+  children: [
+    { label: 'Tailscale mesh between every box', status: 'online' as const },
+    { label: 'WireGuard tunnels', status: 'online' as const },
+    { label: 'Cloudflare DNS', status: 'online' as const },
+  ],
+};
+
+const inferenceItems = [
+  { name: 'llama.cpp', description: 'Local LLM server, Vulkan + ROCm backends', status: 'online' as const, pulse: true, meta: 'b9106' },
+  { name: 'Qwen3.6-35B-A3B', description: 'MoE model, 3B active params', status: 'online' as const, meta: 'Q4_K_M' },
+  { name: 'AMD ROCm / HIP', description: 'Native HIP backend on RX 7800 XT', status: 'online' as const, meta: 'gfx1101' },
+  { name: 'ComfyUI', description: 'Image-gen workflow server', status: 'online' as const, meta: 'ROCm' },
+  { name: 'Chroma1-HD', description: 'FLUX-based diffusion, pruned', status: 'online' as const, meta: 'Q6_K' },
+];
+
+const bench = [
+  { title: 'Local AI assistant ecosystem', sub: 'multi-backend proxy + embedding server', meta: 'wip' },
+  { title: 'Fuel-price recognition platform', sub: 'end-to-end, beyond the Re-Fuel MVP', meta: 'research' },
+  { title: 'Faster local inference', sub: 'HIP-native builds, draft-model speculation', meta: 'shipping' },
+];
+
+const card = 'rounded-lg border border-border bg-bg-glass p-6 backdrop-blur-glass';
+const cardTitle = 'text-h5 uppercase tracking-widest text-text-muted mb-4';
+---
+
+<section id="lab" class="py-section px-6" aria-labelledby="section-lab-title">
+  <div class="mx-auto max-w-content">
+    <div data-reveal>
+      <SectionHeader
+        id="section-lab-title"
+        eyebrow="05 — Lab"
+        title="The lab"
+        description="Where the side projects live: a Proxmox box at home, an ARM VPS in the cloud, and a GPU that rarely gets a day off. Same habits as the day job, just with nobody to page but me."
+      />
+    </div>
+
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <div class={card} data-reveal>
+        <h3 class={cardTitle}>Homelab</h3>
+        <div role="tree" aria-label="Homelab infrastructure">
+          <TreeNode node={homelabTree} />
+        </div>
+      </div>
+
+      <div class={card} data-reveal data-reveal-delay="80">
+        <h3 class={cardTitle}>Cloud</h3>
+        <div role="tree" aria-label="Cloud VPS services">
+          <TreeNode node={vpsTree} />
+        </div>
+        <div class="mt-4 border-t border-border pt-4" role="tree" aria-label="Networking">
+          <TreeNode node={networkTree} />
+        </div>
+      </div>
+
+      <div class={card} data-reveal>
+        <div class="mb-4 flex items-center justify-between gap-3">
+          <h3 class="text-h5 uppercase tracking-widest text-text-muted">Workstation · local AI</h3>
+          <span class="inline-flex items-center gap-2 font-mono-sm text-text-muted">
+            <StatusDot status="online" pulse={true} />
+            inference ready
+          </span>
+        </div>
+        <div class="space-y-0.5">
+          {inferenceItems.map((item) => <StatusRow {...item} />)}
+        </div>
+      </div>
+
+      <div class={card} data-reveal data-reveal-delay="80">
+        <h3 class={cardTitle}>On the bench</h3>
+        <ul>
+          {bench.map((item) => (
+            <li class="flex items-baseline gap-4 border-b border-border py-3 last:border-b-0">
+              <span class="flex-shrink-0 font-mono text-accent">→</span>
+              <div class="flex-1">
+                <span class="font-mono text-text">{item.title}</span>
+                <p class="mt-1 font-mono-sm text-text-muted">{item.sub}</p>
+              </div>
+              <span class="flex-shrink-0 font-mono-sm text-text-dim">{item.meta}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>

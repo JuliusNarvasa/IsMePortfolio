@@ -1,12 +1,12 @@
 ---
+import ResumeLink from './ui/ResumeLink.astro';
+
 const navLinks = [
-  { label: 'Beyond', href: '#beyond-the-code' },
-  { label: 'Pet Projects', href: '#pet-projects' },
-  { label: 'Projects', href: '#projects' },
-  { label: 'Infrastructure', href: '#infrastructure' },
-  { label: 'AI Lab', href: '#ai-lab' },
   { label: 'Experience', href: '#experience' },
-  { label: 'Building', href: '#building' },
+  { label: 'Work', href: '#projects' },
+  { label: 'Stack', href: '#stack' },
+  { label: 'About', href: '#beyond-the-code' },
+  { label: 'Lab', href: '#lab' },
   { label: 'Contact', href: '#contact' },
 ];
 ---
@@ -33,6 +33,7 @@ const navLinks = [
           </a>
         </li>
       ))}
+      <li><ResumeLink variant="nav" /></li>
     </ul>
   </div>
 </nav>
@@ -47,14 +48,16 @@ const navLinks = [
   });
 
   // Active section highlight via IntersectionObserver
-  const sections = document.querySelectorAll('section[id]');
+  // The hero has no nav item, so observing it clears the highlight at the top.
+  const sections = document.querySelectorAll('section[id], header#top');
   const navLinks = document.querySelectorAll('[data-nav-anchor]');
 
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          const id = entry.target.getAttribute('id');
+          // Sections without their own nav item can borrow one via data-nav-alias.
+          const id = entry.target.getAttribute('data-nav-alias') ?? entry.target.getAttribute('id');
           navLinks.forEach((link) => {
             const href = link.getAttribute('data-nav-anchor');
             if (href === `#${id}`) {
@@ -68,7 +71,7 @@ const navLinks = [
         }
       });
     },
-    { threshold: 0.15, rootMargin: '0px 0px -10% 0px' }
+    { threshold: 0, rootMargin: '-50% 0px -50% 0px' }
   );
 
   sections.forEach((section) => observer.observe(section));

@@ -1,11 +1,23 @@
 ---
+import ResumeLink from '../ui/ResumeLink.astro';
+import { site, yearsExperience } from '../../config/site';
+import { projectCount } from '../../data/experience';
+
+// Quick-scan facts for the 30-second skim. Counts are derived from
+// src/data/experience.ts so they can't drift from the timeline.
+const facts = [
+  { value: `${yearsExperience} yrs`, label: `since ${site.startYear}` },
+  { value: String(projectCount), label: 'projects delivered' },
+  { value: '1', label: 'acquisition' },
+  { value: site.timezone, label: site.location },
+];
 ---
 
-<header id="top" class="relative flex min-h-screen items-center overflow-hidden px-6 lg:px-24">
+<header id="top" class="relative flex min-h-screen items-center overflow-hidden px-6 py-section lg:py-0">
   {/* Ambient accent blob */}
   <div class="pointer-events-none absolute -right-40 -top-40 h-[800px] w-[800px] rounded-full bg-accent-glow opacity-12 blur-[800px]"></div>
 
-  <div class="relative z-10 mx-auto flex w-full max-w-wide items-center gap-12 lg:gap-16">
+  <div class="relative z-10 mx-auto flex w-full max-w-content items-center gap-12 lg:gap-16">
     {/* Text column */}
     <div class="flex-1">
       {/* Eyebrow */}
@@ -15,41 +27,33 @@
 
       {/* Name */}
       <h1 class="text-h1 md:text-display font-semibold text-text mb-3" data-reveal data-reveal-delay="80">
-        Julius Narvasa
+        {site.name}
       </h1>
 
       {/* Role */}
-      <p class="text-h4 text-text-muted mb-6" data-reveal data-reveal-delay="160">
-        Software Developer
+      <p class="text-h4 text-text mb-6" data-reveal data-reveal-delay="80">
+        {site.role}
       </p>
 
       {/* Lead */}
-      <p class="text-body-lg text-text-muted max-w-prose mb-6" data-reveal data-reveal-delay="240">
-        I build backend systems, self-hosted AI infrastructure, and developer tooling. Currently exploring local LLMs and computer vision pipelines on AMD hardware.
+      <p class="text-body-lg text-text-muted max-w-prose mb-4" data-reveal data-reveal-delay="160">
+        I build software end to end: APIs, web and mobile apps, the cloud infrastructure underneath, and lately the data platforms on top.
+        <span class="text-text">{yearsExperience} years in</span>, I'm also the one teams pull back in when an old system goes down.
       </p>
-
-      {/* Interests */}
-      <p class="font-mono-lg text-text-muted mb-8" data-reveal data-reveal-delay="320">
-        <span>backend</span>
-        <span class="text-accent-muted mx-2">·</span>
-        <span>apis</span>
-        <span class="text-accent-muted mx-2">·</span>
-        <span>cloud infra</span>
-        <span class="text-accent-muted mx-2">·</span>
-        <span>local ai</span>
-        <span class="text-accent-muted mx-2">·</span>
-        <span>self-hosted systems</span>
+      <p class="text-body text-text-muted max-w-prose mb-8" data-reveal data-reveal-delay="160">
+        Off the clock I run LLMs on my own GPU and fix small daily annoyances with code.
       </p>
 
       {/* CTAs */}
-      <div class="flex items-center gap-3" data-reveal data-reveal-delay="400">
+      <div class="flex flex-wrap items-center gap-3 mb-10" data-reveal data-reveal-delay="240">
         <a
-          href="#projects"
+          href="#experience"
           class="inline-flex items-center rounded-md bg-accent px-5 py-2.5 font-mono text-text shadow-subtle transition-all duration-base ease-out-snappy hover:bg-accent-hover hover:shadow-accent-glow active:scale-95"
           style="color: #0B0F14; font-weight: 500;"
         >
-          View Projects →
+          See my work →
         </a>
+        <ResumeLink />
         <a
           href="#contact"
           class="inline-flex items-center rounded-md border border-border bg-bg-glass px-5 py-2.5 font-mono text-text backdrop-blur-glass transition-all duration-base ease-out-snappy hover:border-border-strong hover:shadow-glass active:scale-95"
@@ -57,16 +61,37 @@
           Contact
         </a>
       </div>
+
+      {/* At-a-glance facts */}
+      <dl class="grid max-w-prose grid-cols-2 gap-px overflow-hidden rounded-lg border border-border bg-border sm:grid-cols-4" data-reveal data-reveal-delay="320">
+        {facts.map((fact) => (
+          <div class="flex flex-col-reverse justify-end gap-1 bg-bg-elevated px-4 py-3">
+            <dt class="font-mono-sm text-text-dim leading-snug">{fact.label}</dt>
+            <dd class="font-mono-lg text-accent">{fact.value}</dd>
+          </div>
+        ))}
+      </dl>
+
+      {/* Photo — mobile/tablet only (the desktop slideshow is hidden below lg) */}
+      <figure class="mt-10 max-w-sm lg:hidden" data-reveal data-reveal-delay="400">
+        <img
+          src="/heroimages/1.jpg"
+          alt="Julius grinning next to a Creality 3D printer, with two cats lounging under the desk"
+          class="aspect-[3/4] w-full rounded-lg border border-border object-cover"
+          loading="lazy"
+        />
+        <figcaption class="mt-2 font-mono-sm text-text-dim">// new 3D printer. the cats are supervising.</figcaption>
+      </figure>
     </div>
 
     {/* Slideshow column — desktop only */}
     <div class="hero-slideshow relative hidden h-[600px] w-[500px] flex-shrink-0 lg:block" data-reveal data-reveal-delay="200">
-      <img src="/heroimages/1.jpg" alt="" role="button" tabindex="0" aria-label="View image full size" data-hero-slide-index="0" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover" />
-      <img src="/heroimages/2.jpg" alt="" role="button" tabindex="0" aria-label="View image full size" data-hero-slide-index="1" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover" />
-      <img src="/heroimages/3.jpg" alt="" role="button" tabindex="0" aria-label="View image full size" data-hero-slide-index="2" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover" />
-      <img src="/heroimages/4.jpg" alt="" role="button" tabindex="0" aria-label="View image full size" data-hero-slide-index="3" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover" />
-      <img src="/heroimages/5.jpg" alt="" role="button" tabindex="0" aria-label="View image full size" data-hero-slide-index="4" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover" />
-      <img src="/heroimages/6.jpg" alt="" role="button" tabindex="0" aria-label="View image full size" data-hero-slide-index="5" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover" />
+      <img src="/heroimages/1.jpg" alt="" role="button" tabindex="0" aria-label="View image full size" data-hero-slide-index="0" fetchpriority="high" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover" />
+      <img src="/heroimages/2.jpg" alt="" role="button" tabindex="0" aria-label="View image full size" data-hero-slide-index="1" loading="lazy" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover" />
+      <img src="/heroimages/3.jpg" alt="" role="button" tabindex="0" aria-label="View image full size" data-hero-slide-index="2" loading="lazy" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover" />
+      <img src="/heroimages/4.jpg" alt="" role="button" tabindex="0" aria-label="View image full size" data-hero-slide-index="3" loading="lazy" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover" />
+      <img src="/heroimages/5.jpg" alt="" role="button" tabindex="0" aria-label="View image full size" data-hero-slide-index="4" loading="lazy" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover" />
+      <img src="/heroimages/6.jpg" alt="" role="button" tabindex="0" aria-label="View image full size" data-hero-slide-index="5" loading="lazy" class="hero-slide absolute inset-0 h-full w-full rounded-lg object-cover" />
 
       {/* Lightbox — single instance, positioned at the end of the slideshow
           column. `position: fixed` escapes the column's stacking context so

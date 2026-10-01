@@ -4,25 +4,48 @@ import ProjectCard from '../ui/ProjectCard.astro';
 
 const projects = [
   {
-    slug: 'portfolio',
-    title: 'Portfolio',
-    category: 'web',
-    problem: 'Needed a personal site that feels like a developer dashboard, not a corporate landing page.',
+    slug: 'data-platform',
+    title: 'Contact-centre data platform',
+    category: 'internal',
+    featured: true,
+    problem: 'Contact-centre data lived in separate vendor tools (Genesys and Zendesk). The goal: one governed platform for KPI reporting, built and tested without ever touching production data.',
     challenges: [
-      'Astro static site with React components',
-      'Glassmorphism design system with scroll-reveal',
-      'Hero image slideshow with CSS-only crossfade',
+      'Wire-level mock of both vendor APIs: 22 endpoints, seeded synthetic data, contract tests',
+      'Bronze → silver → gold pipelines on Microsoft Fabric, with gold remodeled as a star schema for self-serve Power BI',
+      'Repository governance in Terraform: PR plan comments, daily drift checks, apply on merge',
     ],
-    tech: ['astro', 'react', 'typescript', 'tailwindcss'],
-    links: {
-      github: 'https://github.com/JuliusNarvasa/IsMePortfolio',
-      demo: 'https://me.bambaw-tumba.com',
-      demoLabel: 'demo (omg recursion)',
+    tech: ['microsoft-fabric', 'python', 'power-bi', 'terraform', 'wiremock', 'pytest', 'azure', 'github-actions'],
+    links: {},
+    note: 'internal work · code is private',
+    diagram: {
+      label: 'Data platform: Genesys and Zendesk data, from live APIs or a 22-endpoint synthetic mock, flows through bronze, silver, and gold lakehouse layers into Power BI.',
+      text: `Genesys ─┐
+         ├─▶ bronze ─▶ silver ─▶ gold ─▶ Power BI
+Zendesk ─┘    raw     cleaned  star schema
+
+  live APIs, or a 22-endpoint synthetic mock`,
     },
-    screenshot: {
-      src: '/og.png',
-      alt: 'Julius Narvasa portfolio site showing developer dashboard aesthetic',
-      type: 'web' as const,
+  },
+  {
+    slug: 'isp-billing',
+    title: 'ISP billing platform',
+    category: 'freelance',
+    problem: 'ISPs run on recurring subscriptions, and every failed payment is a customer quietly slipping away. They needed one platform to manage customers and billing across many operators.',
+    challenges: [
+      'Multi-tenant APIs serving many ISPs from one platform',
+      'Stripe and GoCardless payment integrations',
+      'Subscription recovery workflows for failed payments',
+    ],
+    tech: ['multi-tenant', 'apis', 'stripe', 'gocardless', 'billing'],
+    links: {},
+    note: 'freelance · code is private',
+    diagram: {
+      label: 'ISP billing platform architecture: multiple ISP tenants call one API, which routes billing to Stripe and GoCardless and feeds failed payments into subscription recovery.',
+      text: `ISP A ─┐
+ISP B ─┼─▶  API  ─▶  billing ─┬─▶ Stripe
+ISP C ─┘     │                └─▶ GoCardless
+             ▼
+   subscription recovery`,
     },
   },
   {
@@ -89,18 +112,19 @@ const projects = [
 ---
 
 <section id="projects" class="py-section px-6" aria-labelledby="section-projects-title">
-  <div class="mx-auto max-w-[96rem]">
+  <div class="mx-auto max-w-content">
     <div data-reveal>
       <SectionHeader
-        eyebrow="01 — Projects"
-        title="Featured Projects"
-        description="Things I've built end-to-end."
+        id="section-projects-title"
+        eyebrow="02 — Work"
+        title="Selected work"
+        description="Client work up front, side projects after. Each one solved a real problem for someone, usually me."
       />
     </div>
 
-    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
       {projects.map((project, i) => (
-        <div data-reveal data-reveal-delay={String(i * 80)}>
+        <div class:list={[project.featured && 'md:col-span-2']} data-reveal data-reveal-delay={String((i % 2) * 80)}>
           <ProjectCard {...project} />
         </div>
       ))}

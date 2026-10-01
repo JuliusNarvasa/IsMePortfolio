@@ -11,20 +11,34 @@ interface Props {
     demo?: string;
     demoLabel?: string;
   };
-  screenshot: {
+  // Shown in place of links, e.g. for client work whose code is private.
+  note?: string;
+  screenshot?: {
     src: string;
     alt: string;
     type?: 'web' | 'mobile';
   };
+  // Plain-text architecture sketch rendered in the screenshot slot when
+  // there is no screenshot to show (client work under wraps).
+  diagram?: {
+    text: string;
+    label: string;
+  };
+  // Spans the full grid row with the visual beside the text (md and up).
+  featured?: boolean;
 }
 
-const { slug, title, category, problem, challenges, tech, links, screenshot } = Astro.props;
+const { title, category, problem, challenges, tech, links, note, screenshot, diagram, featured = false } = Astro.props;
 ---
 
-<article class="group rounded-lg border border-border bg-bg-elevated shadow-subtle transition-all duration-slow ease-out-snappy hover:-translate-y-1 hover:border-accent hover:shadow-accent-glow focus-within:border-accent focus-within:shadow-accent-glow">
+<article class:list={['group rounded-lg border border-border bg-bg-elevated shadow-subtle transition-all duration-slow ease-out-snappy hover:-translate-y-1 hover:border-accent hover:shadow-accent-glow focus-within:border-accent focus-within:shadow-accent-glow', featured && 'md:grid md:grid-cols-2']}>
   {/* Screenshot area */}
-  <div class="relative overflow-hidden rounded-t-lg" style="aspect-ratio: 16 / 9;">
-    {screenshot.src ? (
+  <div class:list={['relative aspect-video overflow-hidden rounded-t-lg', featured && 'md:aspect-auto md:h-full md:min-h-[320px] md:rounded-l-lg md:rounded-tr-none']}>
+    {diagram ? (
+      <figure class="flex h-full w-full overflow-x-auto bg-bg px-4" aria-label={diagram.label}>
+        <pre class="m-auto font-mono text-[10px] leading-tight text-text-muted lg:text-body-sm xl:text-body" aria-hidden="true">{diagram.text}</pre>
+      </figure>
+    ) : screenshot?.src ? (
       <img
         src={screenshot.src}
         alt={screenshot.alt}
@@ -41,7 +55,7 @@ const { slug, title, category, problem, challenges, tech, links, screenshot } = 
   {/* Content */}
   <div class="p-6">
     {/* Title row */}
-    <div class="mb-2 flex items-center gap-3">
+    <div class="mb-2 flex flex-wrap items-center gap-x-3 gap-y-1">
       <h3 class="text-h3 text-text">{title}</h3>
       <span class="inline-flex items-center gap-1.5 rounded-sm border border-border bg-bg-glass px-2 py-0.5 font-mono-sm uppercase text-text-muted">
         <span class="inline-block h-1.5 w-1.5 rounded-full bg-accent"></span>
@@ -78,6 +92,9 @@ const { slug, title, category, problem, challenges, tech, links, screenshot } = 
 
     {/* Links */}
     <div class="flex items-center gap-4 pt-2">
+      {note && (
+        <span class="font-mono-sm text-text-dim">{note}</span>
+      )}
       {links.github && (
         <a
           href={links.github}

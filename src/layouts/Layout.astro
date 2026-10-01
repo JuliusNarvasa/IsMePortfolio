@@ -4,12 +4,26 @@ interface Props {
   description?: string;
 }
 
+import '../styles/global.css';
+import { site, description as siteDescription } from '../config/site';
+
 const {
-  title = 'Julius Narvasa — Software Developer',
-  description = 'Senior backend, infrastructure, and AI engineer. Building self-hosted systems, local LLMs, and developer tooling.',
+  title = `${site.name} — ${site.role}`,
+  description = siteDescription,
 } = Astro.props;
 
-import '../styles/global.css';
+// schema.org Person: lets search engines show a proper profile card.
+const personLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: site.name,
+  jobTitle: site.role,
+  url: site.url,
+  email: `mailto:${site.email}`,
+  address: { '@type': 'PostalAddress', addressCountry: 'PH' },
+  sameAs: [site.linkedin, site.github],
+  knowsAbout: ['Backend development', 'Frontend development', 'Mobile apps', 'API design', 'Payment integrations', 'Data engineering', 'Microsoft Fabric', 'Infrastructure as code', 'Azure', 'Local LLMs'],
+};
 ---
 
 <!DOCTYPE html>
@@ -18,29 +32,35 @@ import '../styles/global.css';
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
+    <meta name="theme-color" content="#0B0F14" />
+    <!-- Content is only hidden for the reveal animation when JS is running. -->
+    <script is:inline>document.documentElement.classList.add('js');</script>
     <meta name="description" content={description} />
 
     <!-- Open Graph -->
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content="profile" />
+    <meta property="og:url" content={site.url} />
     <meta property="og:image" content="https://me.bambaw-tumba.com/og.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Julius Narvasa — Software Developer" />
+    <meta property="og:image:alt" content={`${site.name} — ${site.role}`} />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content="https://me.bambaw-tumba.com/og.png" />
-    <meta name="twitter:image:alt" content="Julius Narvasa — Software Developer" />
+    <meta name="twitter:image:alt" content={`${site.name} — ${site.role}`} />
 
     <!-- Canonical -->
     <link rel="canonical" href="https://me.bambaw-tumba.com" />
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(personLd)} />
   </head>
   <body>
     <slot />

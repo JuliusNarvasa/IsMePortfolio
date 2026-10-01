@@ -1,0 +1,35 @@
+---
+import { site } from '../../config/site';
+
+interface Props {
+  variant?: 'button' | 'nav';
+  label?: string;
+}
+
+const { variant = 'button', label = 'Résumé' } = Astro.props;
+
+const isSet = site.resumeUrl.length > 0;
+const isDev = import.meta.env.DEV;
+
+const classes = variant === 'nav'
+  ? 'inline-flex items-center gap-1.5 rounded-sm border px-2.5 py-1 font-mono-sm uppercase tracking-wider transition-colors duration-fast'
+  : 'inline-flex items-center gap-2 rounded-md border px-5 py-2.5 font-mono backdrop-blur-glass transition-all duration-base ease-out-snappy active:scale-95';
+---
+
+{isSet ? (
+  <a
+    href={site.resumeUrl}
+    target="_blank"
+    rel="noopener noreferrer"
+    class:list={[classes, 'border-border-accent bg-accent-muted text-accent hover:border-accent hover:text-accent-hover hover:shadow-accent-glow']}
+  >
+    {label} <span aria-hidden="true">↓</span>
+  </a>
+) : isDev && (
+  <span
+    class:list={[classes, 'cursor-not-allowed border-dashed border-border-strong text-text-dim']}
+    title="Set site.resumeUrl in src/config/site.ts — hidden in production until then"
+  >
+    {label} <span aria-hidden="true">↓</span>
+  </span>
+)}

@@ -37,10 +37,10 @@ const interests = [
 const projects = [
   {
     title: 'Homelab',
-    problem: 'Every service in the internet requires a subscription now. Photos storage, watching anime, password managers... Why not do it for free?',
+    problem: 'Every service on the internet wants a subscription now. Photo storage, anime, password managers... why not host it myself for free?',
     solution: 'A Proxmox box running Immich, Jellyfin, Vaultwarden, qBittorrent, and a few too many things.',
     images: [
-      { src: '/images/personality/homelab-1.png', alt: 'The Immich photo library UI, self-hosted and showing ~4 TB of personal photos indexed and searchable.' },
+      { src: '/images/personality/homelab-1.jpg', alt: 'The Immich photo library UI, self-hosted and showing ~4 TB of personal photos indexed and searchable.' },
       { src: '/images/personality/homelab-2.jpg', alt: 'The Jellyfin home screen with Anime and Movies libraries set up on a local server.' },
       { src: '/images/personality/homelab-3.jpg', alt: 'The Vaultwarden login screen — Bitwarden’s unofficial rewrite, running on a Raspberry Pi-class box.' },
       { src: '/images/personality/homelab-4.jpg', alt: 'A homelab monitor displaying a wall of red systemd service-failed messages — the day the boxes collectively gave up.' },
@@ -66,26 +66,17 @@ const projects = [
     problem: 'I had no idea if my ISP failover was actually working.',
     solution: 'A self-hosted Grafana dashboard that graphs latency and downtime per ISP in real time.',
     images: [
-      { src: '/images/personality/networkwatcher-1.bmp', alt: 'NetworkWatcher Grafana dashboard showing ISP latency and uptime per ISP.' },
+      { src: '/images/personality/networkwatcher-1.jpg', alt: 'NetworkWatcher Grafana dashboard showing ISP latency and uptime per ISP.' },
     ],
   },
   {
     title: 'Local Llama',
     problem: 'Cloud LLM APIs were getting expensive and laggy for daily use.',
-    solution: 'A local llama.cpp + ROCm rig running a 30B model on my GPU, free of charge.',
+    solution: 'A local llama.cpp + ROCm rig running a 35B MoE model on my own GPU, free of charge.',
     images: [
       { src: '/images/personality/locallama-1.jpg', alt: 'A locally-hosted LLM chat showing a real-time token counter (32.8k) and an in-flight API request.' },
-      { src: '/images/personality/locallama-2.bmp', alt: 'A local llama.cpp chat session running on a consumer AMD GPU, no cloud involved.' },
+      { src: '/images/personality/locallama-2.jpg', alt: 'A local llama.cpp chat session running on a consumer AMD GPU, no cloud involved.' },
     ],
-  },
-  {
-    title: 'GPU VRAM Monitor',
-    problem: 'Windows could not tell me which process was eating my VRAM.',
-    solution: 'A small WPF tool that shows per-process VRAM usage for AMD GPUs.',
-    images: [
-      { src: '/images/projects/gpuvrammonitor.png', alt: 'GPU VRAM Monitor — a WPF tool showing per-process VRAM usage for an AMD Radeon RX 7800 XT.' },
-    ],
-    href: 'https://github.com/JuliusNarvasa/GPUVramMonitor',
   },
 ];
 
@@ -98,7 +89,7 @@ const petProjectsImageSources = projects.map((p) => p.images.map((i) => i.src));
 {/* Section A — Beyond the Code (narrative + interests) */}
 <section
   id="beyond-the-code"
-  class="min-h-screen flex flex-col justify-center py-section px-6"
+  class="py-section px-6"
   aria-labelledby="section-personality-title"
 >
   <div class="mx-auto w-full max-w-content">
@@ -110,7 +101,8 @@ const petProjectsImageSources = projects.map((p) => p.images.map((i) => i.src));
       <div class="flex flex-col gap-5">
         <div data-reveal>
           <SectionHeader
-            eyebrow="00 — Beyond the code"
+            id="section-personality-title"
+            eyebrow="04 — About"
             title="Beyond the Code"
             description="A peek at what I build and break when nobody's watching."
           />
@@ -159,7 +151,7 @@ const petProjectsImageSources = projects.map((p) => p.images.map((i) => i.src));
           data-reveal
           data-reveal-delay="320"
         >
-          Outside of work, I play pickleball, push consumer hardware further than it probably wants to go, and rebuild my homelab more often than I should.
+          Outside of work, I play pickleball, push consumer hardware further than it probably wants to go, and rebuild my homelab more often than I should. I once gave a company tech talk on 3D printing, and nobody has stopped me since.
         </p>
       </div>
 
@@ -228,10 +220,11 @@ const petProjectsImageSources = projects.map((p) => p.images.map((i) => i.src));
 {/* Section B — Built Because It Annoyed Me (pet projects) — master/detail */}
 <section
   id="pet-projects"
-  class="min-h-screen flex flex-col justify-center py-section px-6"
+  data-nav-alias="beyond-the-code"
+  class="pb-section px-6"
   aria-labelledby="section-pet-projects-title"
 >
-  <div class="mx-auto w-full max-w-[80vw]">
+  <div class="mx-auto w-full max-w-content">
     <div class="mb-10" data-reveal>
       <p class="font-mono-sm text-accent mb-2">// pet_projects.built_from_frustration</p>
       <h3 id="section-pet-projects-title" class="text-h3 text-text mb-2">Built Because It Annoyed Me</h3>

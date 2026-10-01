@@ -1,11 +1,14 @@
 ---
 import SectionHeader from '../ui/SectionHeader.astro';
 import HandleRow from '../ui/HandleRow.astro';
+import ResumeLink from '../ui/ResumeLink.astro';
+import { site } from '../../config/site';
 
 const handles = [
-  { label: 'email', value: 'jibnarvasa@gmail.com', href: 'mailto:jibnarvasa@gmail.com' },
-  { label: 'linkedin', value: 'linkedin.com/in/bambaw-tumba', href: 'https://www.linkedin.com/in/bambaw-tumba/' },
-  { label: 'github', value: 'github.com/JuliusNarvasa', href: 'https://github.com/JuliusNarvasa' },
+  { label: 'email', value: site.email, href: `mailto:${site.email}` },
+  { label: 'linkedin', value: site.linkedin.replace(/^https:\/\/www\./, '').replace(/\/$/, ''), href: site.linkedin },
+  { label: 'github', value: site.github.replace(/^https:\/\//, ''), href: site.github },
+  { label: 'based in', value: `${site.location} · ${site.timezone}` },
 ];
 ---
 
@@ -13,9 +16,10 @@ const handles = [
   <div class="mx-auto max-w-narrow">
     <div data-reveal>
       <SectionHeader
+        id="section-contact-title"
         eyebrow="06 — Contact"
-        title="Get in touch"
-        description="Open to interesting backend, infra, and AI work."
+        title="Let's talk"
+        description="Open to backend, infrastructure, and AI roles. If you're hiring for something interesting, I'd like to hear about it."
       />
     </div>
 
@@ -25,9 +29,10 @@ const handles = [
       ))}
     </dl>
 
-    <div class="mt-8 text-right" data-reveal data-reveal-delay="160">
+    <div class="mt-8 flex flex-wrap items-center justify-end gap-4" data-reveal data-reveal-delay="160">
+      <ResumeLink label="Download résumé" />
       <a
-        href="mailto:jibnarvasa@gmail.com"
+        href={`mailto:${site.email}`}
         class="font-mono-lg text-accent transition-colors duration-fast hover:text-accent-hover hover:underline"
       >
         say hi →
